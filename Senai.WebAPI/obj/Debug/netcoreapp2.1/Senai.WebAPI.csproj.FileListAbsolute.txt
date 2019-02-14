@@ -1,0 +1,14 @@
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.deps.json
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.runtimeconfig.json
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.runtimeconfig.dev.json
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.dll
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.csprojAssemblyReference.cache
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.csproj.CoreCompileInputs.cache
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.RazorAssemblyInfo.cache
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.RazorAssemblyInfo.cs
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.AssemblyInfoInputs.cache
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.AssemblyInfo.cs
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.RazorTargetAssemblyInfo.cache
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.pdb
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.dll
+C:\Users\47326175810\Desktop\Sprint 2\Senai.WebAPI\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.pdb
