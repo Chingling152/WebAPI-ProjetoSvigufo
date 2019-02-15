@@ -1,1 +1,0 @@
-INSERT INTO TIPO_EVENTO VALUES('Design'),('Programação'),('Games');--valores pre iniciados

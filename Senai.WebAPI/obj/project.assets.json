@@ -12540,11 +12540,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\47326175810\\Desktop\\Sprint 2\\Senai.WebAPI\\Senai.WebAPI\\Senai.WebAPI.csproj",
+      "projectUniqueName": "C:\\Users\\47326175810\\Desktop\\Svigufo\\Senai.WebAPI\\Senai.WebAPI\\Senai.WebAPI.csproj",
       "projectName": "Senai.WebAPI",
-      "projectPath": "C:\\Users\\47326175810\\Desktop\\Sprint 2\\Senai.WebAPI\\Senai.WebAPI\\Senai.WebAPI.csproj",
+      "projectPath": "C:\\Users\\47326175810\\Desktop\\Svigufo\\Senai.WebAPI\\Senai.WebAPI\\Senai.WebAPI.csproj",
       "packagesPath": "C:\\Users\\47326175810\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\47326175810\\Desktop\\Sprint 2\\Senai.WebAPI\\Senai.WebAPI\\obj\\",
+      "outputPath": "C:\\Users\\47326175810\\Desktop\\Svigufo\\Senai.WebAPI\\Senai.WebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
