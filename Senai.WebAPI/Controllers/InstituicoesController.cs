@@ -2,6 +2,7 @@
 using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
+using System;
 
 namespace Senai.WebAPI.Controllers
 {
@@ -16,7 +17,7 @@ namespace Senai.WebAPI.Controllers
         {
             Instituicao = new InstituicoesRepository();
         }
-
+        #region Get
         [HttpGet]
         public IActionResult ListarInstituicoes() {
             return Ok(Instituicao.Listar());
@@ -24,25 +25,39 @@ namespace Senai.WebAPI.Controllers
         
         [HttpGet("{ID}")]
         public IActionResult BuscarPorID(int ID) {
-            return Ok(Instituicao.BuscarPorId(ID));
+            InstituicoesDomain valor = Instituicao.BuscarPorId(ID);
+            if (valor == null){
+                return NotFound("Instituição não encontrada");
+            }
+            return Ok(valor);
         }
-
+        #endregion
         [HttpPost]
-        public IActionResult InserirInstituicao(InstituicaoDomain instituicao) {
-            Instituicao.Inserir(instituicao);
+        public IActionResult InserirInstituicao(InstituicoesDomain instituicao) {
+            try {
+                Instituicao.Inserir(instituicao);
+            } catch (Exception exc){
+                return BadRequest(exc.Message);
+            }
+
             return Ok(Instituicao.Listar());
         }
 
         [HttpPut]
-        public IActionResult AtualizarInstituicao(InstituicaoDomain instituicao) {
+        public IActionResult AtualizarInstituicao(InstituicoesDomain instituicao) {
             Instituicao.Editar(instituicao);
             return Ok(Instituicao.Listar());
         }
 
         [HttpDelete("{ID}")]
         public IActionResult RemoverInstituicao(int ID) {
-            Instituicao.Deletar(ID);
-            return Ok(Instituicao.Listar());
+            try {
+                Instituicao.Deletar(ID);
+                return Ok(Instituicao.Listar());
+            } catch (Exception exc){
+                return BadRequest(exc.Message);
+            }
+            
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Senai.WebAPI.Repositorios
         /// user = nome do usuario . 
         /// pwd = senha do usuario . 
         /// </summary>
-        private const string conexao = "Data Source = .\\SqlExpress; initial catalog = SVIGUFO;user = sa; pwd = 132";
+        private const string conexao = "Data Source = .\\SqlExpress; initial catalog = SENAI_SVIGUFO_MANHA;user = sa; pwd = 132";
 
         public void Alterar(TiposEventosDomain evento)
         {

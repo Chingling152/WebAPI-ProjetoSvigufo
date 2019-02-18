@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using System.Linq;
+using System;
 using System.Collections.Generic;
 
 using Senai.WebAPI.Domains;
@@ -22,27 +22,40 @@ namespace Senai.WebAPI.Controllers
             tiposEventos = new TiposEventosRepository();
         }
 
-        [HttpGet] //o nome do metodo nçao importa , pois o que definse se ele é get ou set ou outra coisa é o [Http] acima dele
+        [HttpGet] //o nome do metodo não importa , pois o que define se ele é get ou set ou outra coisa é o [Http] acima dele
         public IEnumerable<TiposEventosDomain> RetornarView(){
             return tiposEventos.Listar();
         }
 
         [HttpGet("{ID}")]//Define o parametro na URL
         public IActionResult BuscarPorID(int ID) {
-            return Ok(tiposEventos.ListarPorID(ID));
+            TiposEventosDomain tipoEvento = tiposEventos.ListarPorID(ID);
+
+            if(tipoEvento == null) 
+                return NotFound("O Tipo de evento com este ID não existe");
+            
+            return Ok(tipoEvento);
         }
 
         [HttpPost]
-        public IActionResult CadastrarTipoEvento(TiposEventosDomain tipoevento)//from body 
+        public IActionResult CadastrarTipoEvento(TiposEventosDomain tipoevento) 
         {
-            tiposEventos.Cadastrar(tipoevento);
-            return Ok(tiposEventos.Listar());
+            try {
+                tiposEventos.Cadastrar(tipoevento);
+                return Ok(tiposEventos.Listar());
+            } catch (Exception exc){
+                return BadRequest("Não foi possivel cadastrar o Tipo de Evento\n"+exc.Message);
+            }
         }
         
         [HttpPut]
         public IActionResult AtualizarObjeto(TiposEventosDomain EventoAtualizado) {
-            tiposEventos.Alterar(EventoAtualizado);
-            return Ok(tiposEventos.Listar());
+            try {
+                tiposEventos.Alterar(EventoAtualizado);
+                return Ok(tiposEventos.Listar());
+            }catch(Exception exc) {
+                return BadRequest(exc.Message);
+            }
         }
 
         
