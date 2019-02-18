@@ -17,27 +17,29 @@ namespace Senai.WebAPI.Repositorios
         /// <returns>Retorna a instituição no ID selecionado , caso não exista , retorna null</returns>
         public InstituicoesDomain BuscarPorId(int id)
         {
-            SqlConnection cnx = new SqlConnection(conexao);
-
-            SqlCommand cmd = new SqlCommand("SELECT * FROM VerInstituicoes WHERE ID = @ID", cnx);
-            cmd.Parameters.AddWithValue("@ID", id);
+            using(SqlConnection cnx = new SqlConnection(conexao)) {// maneira adequada de abrir e fechar um banco de dados
+                SqlCommand cmd = new SqlCommand("SELECT * FROM VerInstituicoes WHERE ID = @ID", cnx);
+                cnx.Open();//abre uma conexão com o banco de dados 
+                cmd.Parameters.AddWithValue("@ID", id);
             
-            cnx.Open();
-
-            using (SqlDataReader leitor = cmd.ExecuteReader())
-            {
-                while (leitor.Read())
+                using (SqlDataReader leitor = cmd.ExecuteReader())
                 {
-                    return new InstituicoesDomain(){
-                        ID = Convert.ToInt32(leitor["ID"]),
-                        NomeFantasia = leitor["NOME_FANTASIA"].ToString(),
-                        Logradouro = leitor["LOGRADOURO"].ToString(),
-                        CEP = leitor["CEP"].ToString(),
-                        UF = leitor["UF"].ToString(),
-                        Cidade = leitor["CIDADE"].ToString()
-                   };
+                    if (!leitor.HasRows)
+                        return null;
+                    
+                    while (leitor.Read())
+                    {
+                        return new InstituicoesDomain(){
+                            ID = Convert.ToInt32(leitor["ID"]),
+                            NomeFantasia = leitor["NOME_FANTASIA"].ToString(),
+                            Logradouro = leitor["LOGRADOURO"].ToString(),
+                            CEP = leitor["CEP"].ToString(),
+                            UF = leitor["UF"].ToString(),
+                            Cidade = leitor["CIDADE"].ToString()
+                       };
+                    }
                 }
-            }
+            }//fecha automaticamente a conexão com banco de dados
             return null;
         }
 
@@ -50,9 +52,10 @@ namespace Senai.WebAPI.Repositorios
             SqlConnection cnx = new SqlConnection(conexao);
             string deletar = "DELETE FROM INSTITUICAO WHERE ID = @ID";
             SqlCommand cmd = new SqlCommand(deletar, cnx);
-            cnx.Open();
+            cnx.Open();//maneira rude de abrir conexões com banco de dados
             cmd.Parameters.AddWithValue("@ID", ID);
-            cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+            cnx.Close();//maneira rude de fechar conexões com banco de dados
         }
 
         /// <summary>
@@ -61,20 +64,20 @@ namespace Senai.WebAPI.Repositorios
         /// <param name="instituicao">Nova instituição</param>
         public void Editar(InstituicoesDomain instituicao)
         {
-            SqlConnection cnx = new SqlConnection(conexao);
-            
-            string edit = "UPDATE INSTITUICAO SET NOME_FANTASIA = @NOME , LOGRADOURO = @LOGRADOURO , CEP = @CEP , CIDADE = @CIDADE , UF = @UF WHERE ID = @ID";
-            SqlCommand cmd = new SqlCommand(edit,cnx);
-            cnx.Open();// N ESQUECE ISSAQUI N ;---;
-
-            cmd.Parameters.AddWithValue("@NOME",instituicao.NomeFantasia);
-            cmd.Parameters.AddWithValue("@LOGRADOURO",instituicao.Logradouro);
-            cmd.Parameters.AddWithValue("@CEP",instituicao.CEP);
-            cmd.Parameters.AddWithValue("@CIDADE",instituicao.Cidade);
-            cmd.Parameters.AddWithValue("@UF",instituicao.UF);
-            cmd.Parameters.AddWithValue("@ID",instituicao.ID);
-
-            cmd.ExecuteNonQuery();
+            using(SqlConnection cnx = new SqlConnection(conexao)) {
+                string edit = "UPDATE INSTITUICAO SET NOME_FANTASIA = @NOME , LOGRADOURO = @LOGRADOURO , CEP = @CEP , CIDADE = @CIDADE , UF = @UF WHERE ID = @ID";
+                SqlCommand cmd = new SqlCommand(edit,cnx);
+                cnx.Open();
+                //substitui todos os paramentros com @ por variaveis
+                cmd.Parameters.AddWithValue("@NOME",instituicao.NomeFantasia);
+                cmd.Parameters.AddWithValue("@LOGRADOURO",instituicao.Logradouro);
+                cmd.Parameters.AddWithValue("@CEP",instituicao.CEP);
+                cmd.Parameters.AddWithValue("@CIDADE",instituicao.Cidade);
+                cmd.Parameters.AddWithValue("@UF",instituicao.UF);
+                cmd.Parameters.AddWithValue("@ID",instituicao.ID);
+                //executa o comando
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -83,22 +86,23 @@ namespace Senai.WebAPI.Repositorios
         /// <param name="instituicao">Instituição a ser inserida</param>
         public void Inserir(InstituicoesDomain instituicao)
         {
-            SqlConnection cnx = new SqlConnection(conexao);
-            string insert = "INSERT INTO INSTITUICAO VALUES(@NOME,@RAZAO_SOCIAL,@CNPJ,@LOGRADOURO,@CEP,@UF,@CIDADE)";
+            using(SqlConnection cnx = new SqlConnection(conexao)) {
+                string insert = "INSERT INTO INSTITUICAO VALUES(@NOME,@RAZAO_SOCIAL,@CNPJ,@LOGRADOURO,@CEP,@UF,@CIDADE)";
 
-            SqlCommand cmd = new SqlCommand(insert, cnx);
+                SqlCommand cmd = new SqlCommand(insert, cnx);
+                cnx.Open();//abre uma conexão com o banco de dados
 
-            cmd.Parameters.AddWithValue("@NOME", instituicao.NomeFantasia);
-            cmd.Parameters.AddWithValue("@LOGRADOURO", instituicao.Logradouro);
-            cmd.Parameters.AddWithValue("@CEP", instituicao.CEP);
-            cmd.Parameters.AddWithValue("@CIDADE", instituicao.Cidade);
-            cmd.Parameters.AddWithValue("@UF", instituicao.UF);
-            cmd.Parameters.AddWithValue("@RAZAO_SOCIAL", instituicao.RazaoSocial);
-            cmd.Parameters.AddWithValue("@CNPJ", instituicao.CNPJ);
-            cmd.Parameters.AddWithValue("@ID", instituicao.ID);
+                cmd.Parameters.AddWithValue("@NOME", instituicao.NomeFantasia);
+                cmd.Parameters.AddWithValue("@LOGRADOURO", instituicao.Logradouro);
+                cmd.Parameters.AddWithValue("@CEP", instituicao.CEP);
+                cmd.Parameters.AddWithValue("@CIDADE", instituicao.Cidade);
+                cmd.Parameters.AddWithValue("@UF", instituicao.UF);
+                cmd.Parameters.AddWithValue("@RAZAO_SOCIAL", instituicao.RazaoSocial);
+                cmd.Parameters.AddWithValue("@CNPJ", instituicao.CNPJ);
+                cmd.Parameters.AddWithValue("@ID", instituicao.ID);
 
-            cnx.Open();
-            cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -118,6 +122,8 @@ namespace Senai.WebAPI.Repositorios
 
                 SqlDataReader leitor = cmd.ExecuteReader();
 
+                if (!leitor.HasRows)
+                    return null;
 
                 while (leitor.Read())
                 {

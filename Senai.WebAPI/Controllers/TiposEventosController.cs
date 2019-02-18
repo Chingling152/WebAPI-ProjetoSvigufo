@@ -62,8 +62,12 @@ namespace Senai.WebAPI.Controllers
         [HttpDelete("{ID}")]
         public IActionResult RemoveObect(int ID)
         {
-            tiposEventos.Deletar(ID);
-            return Ok(tiposEventos.Listar());
+            try {
+                tiposEventos.Deletar(ID);
+                return Ok(tiposEventos.Listar());
+            }catch(Exception exc) {
+                return BadRequest(exc.Message);
+            }
         }
         /*
         *  GET     = Buscar

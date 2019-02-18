@@ -69,6 +69,8 @@ namespace Senai.WebAPI.Repositorios
                 cmd.Parameters.AddWithValue("@Id",ID);
 
                 connection.Open();
+
+                cmd.ExecuteNonQuery();
             }
         }
 
