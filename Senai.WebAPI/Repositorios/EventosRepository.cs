@@ -61,7 +61,11 @@ namespace Senai.WebAPI.Repositorios {
     
             return lista;
         }
-
+        /// <summary>
+        /// Lista os eventos que estão nessa data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public List<EventosDomain> ListarPorData(DateTime data)
         {
             List<EventosDomain> lista = new List<EventosDomain>();

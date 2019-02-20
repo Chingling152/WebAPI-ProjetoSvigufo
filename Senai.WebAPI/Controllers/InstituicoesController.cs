@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
@@ -18,11 +19,13 @@ namespace Senai.WebAPI.Controllers
             Instituicao = new InstituicoesRepository();
         }
         #region Get
+        [Authorize(Roles = "1")]
         [HttpGet]
         public IActionResult ListarInstituicoes() {
             return Ok(Instituicao.Listar());
         }
-        
+
+        [Authorize]
         [HttpGet("{ID}")]
         public IActionResult BuscarPorID(int ID) {
             InstituicoesDomain valor = Instituicao.BuscarPorId(ID);
@@ -32,6 +35,7 @@ namespace Senai.WebAPI.Controllers
             return Ok(valor);
         }
         #endregion
+        [Authorize]
         [HttpPost]
         public IActionResult InserirInstituicao(InstituicoesDomain instituicao) {
             try {
@@ -43,12 +47,14 @@ namespace Senai.WebAPI.Controllers
             return Ok(Instituicao.Listar());
         }
 
+        [Authorize]
         [HttpPut]
         public IActionResult AtualizarInstituicao(InstituicoesDomain instituicao) {
             Instituicao.Editar(instituicao);
             return Ok(Instituicao.Listar());
         }
 
+        [Authorize]
         [HttpDelete("{ID}")]
         public IActionResult RemoverInstituicao(int ID) {
             try {
