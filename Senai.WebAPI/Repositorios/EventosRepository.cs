@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
+using Senai.WebAPI.ViewModels;
 
 namespace Senai.WebAPI.Repositorios {
     public class EventosRepository : IEventosRepository {
@@ -10,8 +11,22 @@ namespace Senai.WebAPI.Repositorios {
         private const string conexao = "Data Source=.\\SQLEXPRESS; initial catalog = SENAI_SVIGUFO_MANHA;user id = sa; pwd = 132";
 
         public void Alterar(EventosDomain evento) {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(conexao)) {
+                string comando = "UPDATE EVENTOS SET NOME = @NOME , DESCRICAO = @DESCRICAO , DATA_EVENTO = @DATA_EVENTO , ACESSO_LIVRE = @ACESSO_LIVRE,ID_INSTITUICAO = @ID_INSTITUICAO,ID_TIPO_EVENTO = @ID_TIPO_EVENTO, CANCELADO = @CANCELADO";
+                SqlCommand cmd = new SqlCommand(comando,connection);
+
+                cmd.Parameters.AddWithValue("@NOME", evento.Nome);
+                cmd.Parameters.AddWithValue("@DESCRICAO", evento.Descricao);
+                cmd.Parameters.AddWithValue("@DATA_EVENTO", evento.DataEvento);
+                cmd.Parameters.AddWithValue("@ID_INSTITUICAO", evento.Instituicao.ID);
+                cmd.Parameters.AddWithValue("@ID_TIPO_EVENTO", evento.TipoEvento.ID);
+                cmd.Parameters.AddWithValue("@ACESSO_LIVRE", evento.AcessoLivre);
+                cmd.Parameters.AddWithValue("@CANCELADO", evento.Cancelado);
+
+                cmd.ExecuteNonQuery();
+            }
         }
+
         public void Cancelar(int ID) {
             throw new NotImplementedException();
         }
@@ -53,14 +68,14 @@ namespace Senai.WebAPI.Repositorios {
                             Nome = leitor["EVENTO"].ToString(),
                             Descricao = leitor["DESCRICAO"].ToString(),
                             //Criação do objeto TipoEvento
-                            TipoEvento = new TiposEventosDomain() {
+                            TipoEvento = new TiposEventosView() {
                                 ID = Convert.ToInt32(leitor["ID_TIPO_EVENTO"]),
                                 Nome = leitor["TIPO_EVENTO"].ToString()
                             },
                             //Criação do objeto Instituição
-                            Instituicao = new InstituicoesDomain(){
+                            Instituicao = new InstituicoesView(){
                                 ID = Convert.ToInt32(leitor["ID_INSTITUICAO"]),
-                                NomeFantasia = leitor["INSTITUICAO"].ToString(),
+                                Nome = leitor["INSTITUICAO"].ToString(),
                             }
                         }
                     );

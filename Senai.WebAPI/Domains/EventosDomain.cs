@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Senai.WebAPI.ViewModels;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Senai.WebAPI.Domains {
@@ -20,10 +21,10 @@ namespace Senai.WebAPI.Domains {
         public bool AcessoLivre { get ;set; }
         public bool Cancelado { get; set; }//não sei se é necessario ter essa propriedade
         /* 
-            NA MANEIRA 1 : VOCÊ MANDA O OBJETO INTEIRO COMO PARAMETRO
-            LÁ TERÁ TODOS OS CAMPOS ENTÃO VOCÊ MANDARIA MUITAINFORMAÇÃO PARA APENAS USAR POUCAS
+            NA MANEIRA 3 : VOCÊ CRIA UMA VIEWMODEL
+            LÁ TERÁ TODOS OS CAMPOS NECESSARIOS VOCÊ MANDARIA
         */
-        public InstituicoesDomain Instituicao { get; set; }
-        public TiposEventosDomain TipoEvento { get; set; }
+        public InstituicoesView Instituicao { get; set; }
+        public TiposEventosView TipoEvento { get; set; }
     }
 }

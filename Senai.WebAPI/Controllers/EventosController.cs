@@ -26,9 +26,19 @@ namespace Senai.WebAPI.Controllers {
         }
 
         [HttpPost]
-        public IActionResult InserirEventos(EventosDomain evento) {
+        public IActionResult InserirEvento(EventosDomain evento) {
             try {
                 Repository.Inserir(evento);
+                return Ok(Repository.Listar());
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
+
+        [HttpPut]
+        public IActionResult AlterarEvento(EventosDomain evento) {
+            try {
+                Repository.Alterar(evento);
                 return Ok(Repository.Listar());
             } catch (Exception exc) {
                 return BadRequest(exc.Message);
