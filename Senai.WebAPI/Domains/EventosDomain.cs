@@ -19,7 +19,10 @@ namespace Senai.WebAPI.Domains {
         
         public bool AcessoLivre { get ;set; }
         public bool Cancelado { get; set; }//não sei se é necessario ter essa propriedade
-
+        /* 
+            NA MANEIRA 1 : VOCÊ MANDA O OBJETO INTEIRO COMO PARAMETRO
+            LÁ TERÁ TODOS OS CAMPOS ENTÃO VOCÊ MANDARIA MUITAINFORMAÇÃO PARA APENAS USAR POUCAS
+        */
         public InstituicoesDomain Instituicao { get; set; }
         public TiposEventosDomain TipoEvento { get; set; }
     }
