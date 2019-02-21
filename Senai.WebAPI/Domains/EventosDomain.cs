@@ -20,6 +20,12 @@ namespace Senai.WebAPI.Domains {
         public bool AcessoLivre { get ;set; }
         public bool Cancelado { get; set; }//não sei se é necessario ter essa propriedade
 
+        /*
+         * Maneira 2 : Cria variaveis para o ID 
+         */
+        public int InstituicaoID { get;set;}
+        public int TipoEventoID {get;set;}
+
         public InstituicoesDomain Instituicao { get; set; }
         public TiposEventosDomain TipoEvento { get; set; }
     }

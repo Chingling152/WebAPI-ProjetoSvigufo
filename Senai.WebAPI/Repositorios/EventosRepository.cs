@@ -25,8 +25,8 @@ namespace Senai.WebAPI.Repositorios {
                 cmd.Parameters.AddWithValue("@NOME",evento.Nome);
                 cmd.Parameters.AddWithValue("@DESCRICAO",evento.Descricao);
                 cmd.Parameters.AddWithValue("@DATA_EVENTO",evento.DataEvento);
-                cmd.Parameters.AddWithValue("@ID_INSTITUICAO",evento.Instituicao.ID);
-                cmd.Parameters.AddWithValue("@ID_TIPO_EVENTO",evento.TipoEvento.ID);
+                cmd.Parameters.AddWithValue("@ID_INSTITUICAO",evento.InstituicaoID);
+                cmd.Parameters.AddWithValue("@ID_TIPO_EVENTO",evento.TipoEventoID);
                 cmd.Parameters.AddWithValue("@ACESSO_LIVRE",evento.AcessoLivre);
                 cmd.Parameters.AddWithValue("@CANCELADO",evento.Cancelado);
 
