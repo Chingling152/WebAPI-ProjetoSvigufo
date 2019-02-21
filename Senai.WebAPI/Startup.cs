@@ -34,7 +34,7 @@ namespace Senai.WebAPI
                     ValidIssuer = "Svigufo.WebApi",//Define o nome do solicitante
                     // Quem está recebendo a chave
                     ValidateAudience = true,
-                    ValidAudience = "Svigufo.WebApi",
+                    ValidAudience = "Usuario.Logado",
                     // Define tempo de expiração 
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromMinutes(30),

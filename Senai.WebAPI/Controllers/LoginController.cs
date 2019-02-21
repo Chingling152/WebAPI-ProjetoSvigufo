@@ -29,26 +29,30 @@ namespace Senai.WebAPI.Controllers {
                     return NotFound("Email ou senha incorretos");
                 }
 
-                var clains = new[] {
+                //cria claims que são
+                Claim[] claims = new[] {
                     new Claim(JwtRegisteredClaimNames.Email,usuario.Email),
                     new Claim(JwtRegisteredClaimNames.Jti,usuario.ID.ToString()),
                     new Claim(ClaimTypes.Role,usuario.TipoUsuario.ToString())
                 };
 
-                var Chave = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("SVIGUFO-CHAVE-AUTENTICACAO"));
+                //define a chave do toeken
+                SymmetricSecurityKey Chave = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("SVIGUFO-CHAVE-AUTENTICACAO"));
 
-                var Credencial = new SigningCredentials(Chave,SecurityAlgorithms.HmacSha384);
+                //define o algoritmo de criptografia do token
+                SigningCredentials Credencial = new SigningCredentials(Chave,SecurityAlgorithms.HmacSha384);
 
-                var Token= new JwtSecurityToken(
-                    issuer: "Svigufo.WebApi",
-                    audience : "Svigufo.WebApi",
-                    claims: clains,
-                    expires: DateTime.Now.AddMinutes(30),
-                    signingCredentials:Credencial
+
+                JwtSecurityToken Token = new JwtSecurityToken(
+                    issuer: "Svigufo.WebApi",//Usuario que manda a requisição
+                    audience : "Usuario.Logado",//Usuario que recebe a requisição
+                    claims: claims,//informações do usuario criptografadas
+                    expires: DateTime.Now.AddMinutes(30),//seta um tempo de expiração de 30 minutos
+                    signingCredentials:Credencial// utiliza a credencial
                     );
 
                 return Ok(new {
-                    Token = new JwtSecurityTokenHandler().WriteToken(Token)
+                    Token = new JwtSecurityTokenHandler().WriteToken(Token)//cria o token
                 });
             } catch (Exception exc) {
                 return BadRequest(exc.Message);

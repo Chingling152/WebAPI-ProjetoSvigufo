@@ -6,8 +6,6 @@ namespace Senai.WebAPI.Interfaces {
     public interface IEventosRepository {
 
         List<EventosDomain> Listar();
-
-        EventosDomain BuscarPorID();
     
         List<EventosDomain> ListarPorData(DateTime data);
 
