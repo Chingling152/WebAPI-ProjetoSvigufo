@@ -14,11 +14,10 @@ namespace Senai.WebAPI.Domains {
         public string Descricao { get; set; }
 
         //data evento terá um valor padrão (?)
-        public DateTime DataEvento { get; set; }  = DateTime.Now.Add(TimeSpan.FromDays(1)) ;
+        public DateTime DataEvento { get; set; }
 
         
         public bool AcessoLivre { get ;set; }
-        public bool Cancelado { get; set; }//não sei se é necessario ter essa propriedade
 
         /*
          * Maneira 2 : Cria variaveis para o ID 
@@ -28,5 +27,6 @@ namespace Senai.WebAPI.Domains {
 
         public InstituicoesDomain Instituicao { get; set; }
         public TiposEventosDomain TipoEvento { get; set; }
+
     }
 }

@@ -27,16 +27,6 @@ namespace Senai.WebAPI.Controllers
             return tiposEventos.Listar();
         }
 
-        [HttpGet("{ID}")]//Define o parametro na URL
-        public IActionResult BuscarPorID(int ID) {
-            TiposEventosDomain tipoEvento = tiposEventos.ListarPorID(ID);
-
-            if(tipoEvento == null) 
-                return NotFound("O Tipo de evento com este ID não existe");
-            
-            return Ok(tipoEvento);
-        }
-
         [HttpPost]
         public IActionResult CadastrarTipoEvento(TiposEventosDomain tipoevento) 
         {

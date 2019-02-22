@@ -18,24 +18,14 @@ namespace Senai.WebAPI.Controllers
         {
             Instituicao = new InstituicoesRepository();
         }
-        #region Get
-        [Authorize(Roles = "1")]
+        
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public IActionResult ListarInstituicoes() {
             return Ok(Instituicao.Listar());
         }
-
-        [Authorize]
-        [HttpGet("{ID}")]
-        public IActionResult BuscarPorID(int ID) {
-            InstituicoesDomain valor = Instituicao.BuscarPorId(ID);
-            if (valor == null){
-                return NotFound("Instituição não encontrada");
-            }
-            return Ok(valor);
-        }
-        #endregion
-        [Authorize]
+        
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public IActionResult InserirInstituicao(InstituicoesDomain instituicao) {
             try {
@@ -47,23 +37,17 @@ namespace Senai.WebAPI.Controllers
             return Ok(Instituicao.Listar());
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrador")]
         [HttpPut]
         public IActionResult AtualizarInstituicao(InstituicoesDomain instituicao) {
-            Instituicao.Editar(instituicao);
-            return Ok(Instituicao.Listar());
-        }
-
-        [Authorize]
-        [HttpDelete("{ID}")]
-        public IActionResult RemoverInstituicao(int ID) {
-            try {
-                Instituicao.Deletar(ID);
+            try{
+                Instituicao.Editar(instituicao);
                 return Ok(Instituicao.Listar());
-            } catch (Exception exc){
+            } catch (Exception exc) {
                 return BadRequest(exc.Message);
             }
-            
         }
+
     }
+
 }

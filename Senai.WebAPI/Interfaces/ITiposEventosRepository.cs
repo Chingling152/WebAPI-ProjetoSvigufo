@@ -24,13 +24,6 @@ namespace Senai.WebAPI.Interfaces
         void Alterar(TiposEventosDomain evento);
 
         /// <summary>
-        /// Busca o tipo de evento com o ID selecionado
-        /// </summary>
-        /// <param name="ID">ID do tipo de evento</param>
-        /// <returns>Retorna um tipo de evento</returns>
-        TiposEventosDomain ListarPorID(int ID);
-
-        /// <summary>
         /// Remove o tipo de evento no ID selecionado
         /// </summary>
         /// <param name="ID">ID do tipo de evento a ser deletado</param>
