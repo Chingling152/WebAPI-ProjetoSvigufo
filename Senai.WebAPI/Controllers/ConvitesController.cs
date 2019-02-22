@@ -19,7 +19,7 @@ namespace Senai.WebAPI.Controllers {
             repositorio = new ConvitesRepository();
         }
 
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public IActionResult VerConvites(){
             try {	        
@@ -81,7 +81,7 @@ namespace Senai.WebAPI.Controllers {
         [HttpPut("Alterar")]
         public IActionResult AlterarStatus(ConvitesDomain convite) {
             try {
-                repositorio.Cadastrar(convite);
+                repositorio.Alterar(convite);
                 return Ok("Convite alterado com sucesso com sucesso!");
             } catch (Exception exc) {
                 return BadRequest(exc.Message);

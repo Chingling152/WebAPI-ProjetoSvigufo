@@ -19,7 +19,6 @@ namespace Senai.WebAPI.Domains {
 
         
         public bool AcessoLivre { get ;set; }
-        public bool Cancelado { get; set; }//não sei se é necessario ter essa propriedade
         /* 
             NA MANEIRA 3 : VOCÊ CRIA UMA VIEWMODEL
             LÁ TERÁ TODOS OS CAMPOS NECESSARIOS VOCÊ MANDARIA

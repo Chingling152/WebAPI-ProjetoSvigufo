@@ -17,7 +17,6 @@ namespace Senai.WebAPI.Domains {
         public string Senha;
 
         [Required(ErrorMessage ="Insira um tipo de usuario")]
-        [StringLength(maximumLength: 59, MinimumLength = 3, ErrorMessage = "O tipo de usuario muito grande ou muito pequena")]
-        public string TipoUsuario;
+        public int TipoUsuario;
     }
 }
