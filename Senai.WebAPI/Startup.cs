@@ -14,7 +14,9 @@ namespace Senai.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             //adiciona o Modelo MVC na ultima versão (2.1)
-            services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
+            services.AddMvc().AddJsonOptions(opt =>{
+                opt.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+            }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
            
             // adiciona swagger para a documentação
             services.AddSwaggerGen(c =>
@@ -23,47 +25,54 @@ namespace Senai.WebAPI
             });
 
             //adiciona autenticação
-            services.AddAuthentication(options => {
-                options.DefaultAuthenticateScheme = "JWTBearer";
-                options.DefaultChallengeScheme = "JWTBearer";
-                }
-            ).AddJwtBearer("JWTBearer",item => 
-                item.TokenValidationParameters = new TokenValidationParameters() {
-                    // Define quem está solicitando a chave
+            //Implementa autenticação
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "JwtBearer";
+                options.DefaultChallengeScheme = "JwtBearer";
+            }
+            ).AddJwtBearer("JwtBearer", options => {
+                //Define as opções 
+                options.TokenValidationParameters = new TokenValidationParameters {
+                    //Quem esta solicitando
                     ValidateIssuer = true,
-                    ValidIssuer = "Svigufo.WebApi",//Define o nome do solicitante
-                    // Quem está recebendo a chave
+                    //Quem esta validadando
                     ValidateAudience = true,
-                    ValidAudience = "Usuario.Logado",
-                    // Define tempo de expiração 
+                    //Definindo o tempo de expiração
                     ValidateLifetime = true,
+                    //Forma de criptografia
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("svigufo-chave-autenticacao")),
+                    //Tempo de expiração do Token
                     ClockSkew = TimeSpan.FromMinutes(30),
-                    //forma de criptografia
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("SVIGUFO-CHAVE-AUTENTICACAO"))
-                }
-            );
+                    //Nome da Issuer, de onde esta vindo
+                    ValidIssuer = "SviGufo.WebApi",
+                    //Nome da Audience, de onde esta vindo
+                    ValidAudience = "SviGufo.WebApi"
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
-                // utilizando swagger
-                app.UseSwagger();
-
-                //gera pagina swagger
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SVIGUFO");
-                });
             }
-            // usa o modelo mvc
-            app.UseMvc();
 
-            // usa autenticação por token
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SviGufo");
+            });
+
+            //Habilita a autenticação
             app.UseAuthentication();
+
+            //Habilita o MVC
+            app.UseMvc();
         }
     }
 }

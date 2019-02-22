@@ -31,7 +31,7 @@ namespace Senai.WebAPI.Repositorios
                     {
                         return new InstituicoesDomain(){
                             ID = Convert.ToInt32(leitor["ID"]),
-                            NomeFantasia = leitor["NOME_FANTASIA"].ToString(),
+                            NomeFantasia = leitor["NOME"].ToString(),
                             Logradouro = leitor["LOGRADOURO"].ToString(),
                             CEP = leitor["CEP"].ToString(),
                             UF = leitor["UF"].ToString(),

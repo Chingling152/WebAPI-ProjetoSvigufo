@@ -18,8 +18,8 @@ namespace Senai.WebAPI.Controllers
         {
             Instituicao = new InstituicoesRepository();
         }
-        #region Get
-        [Authorize(Roles = "1")]
+        
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public IActionResult ListarInstituicoes() {
             return Ok(Instituicao.Listar());
@@ -34,8 +34,8 @@ namespace Senai.WebAPI.Controllers
             }
             return Ok(valor);
         }
-        #endregion
-        [Authorize]
+        
+        [Authorize(Roles = "Usuario")]
         [HttpPost]
         public IActionResult InserirInstituicao(InstituicoesDomain instituicao) {
             try {

@@ -24,7 +24,7 @@ namespace Senai.WebAPI.Domains {
             NA MANEIRA 3 : VOCÊ CRIA UMA VIEWMODEL
             LÁ TERÁ TODOS OS CAMPOS NECESSARIOS VOCÊ MANDARIA
         */
-        public InstituicoesView Instituicao { get; set; }
-        public TiposEventosView TipoEvento { get; set; }
+        public InstituicoesViewModel Instituicao { get; set; }
+        public TiposEventosViewModel TipoEvento { get; set; }
     }
 }

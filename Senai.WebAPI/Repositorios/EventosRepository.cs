@@ -57,9 +57,9 @@ namespace Senai.WebAPI.Repositorios {
                 SqlCommand cmd = new SqlCommand(comando,connection);
                 SqlDataReader leitor = cmd.ExecuteReader();
 
-                if (!leitor.HasRows) {
+                if (!leitor.HasRows) 
                     return null;
-                }
+                
                 List<EventosDomain> lista = new List<EventosDomain>();
                 while (leitor.Read()) {
                     lista.Add(
@@ -68,12 +68,12 @@ namespace Senai.WebAPI.Repositorios {
                             Nome = leitor["EVENTO"].ToString(),
                             Descricao = leitor["DESCRICAO"].ToString(),
                             //Criação do objeto TipoEvento
-                            TipoEvento = new TiposEventosView() {
+                            TipoEvento = new TiposEventosViewModel() {
                                 ID = Convert.ToInt32(leitor["ID_TIPO_EVENTO"]),
                                 Nome = leitor["TIPO_EVENTO"].ToString()
                             },
                             //Criação do objeto Instituição
-                            Instituicao = new InstituicoesView(){
+                            Instituicao = new InstituicoesViewModel(){
                                 ID = Convert.ToInt32(leitor["ID_INSTITUICAO"]),
                                 Nome = leitor["INSTITUICAO"].ToString(),
                             }
