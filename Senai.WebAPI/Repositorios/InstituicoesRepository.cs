@@ -6,8 +6,19 @@ using Senai.WebAPI.Interfaces;
 
 namespace Senai.WebAPI.Repositorios
 {
+    /// <summary>
+    /// Classe que manuseia dados de insituições atraves de um banco de dados
+    /// </summary>
     public class InstituicoesRepository : IInstituicoesRepository
     {
+
+        /// <summary>
+        /// string usada para se comunicar com o banco de dado.    
+        /// Data source = local onde esta o banco de dados . 
+        /// initial catalog = Banco de dado que será usado . 
+        /// user = nome do usuario . 
+        /// pwd = senha do usuario . 
+        /// </summary>
         private const string conexao = "Data Source = .\\SqlExpress; initial catalog = SENAI_SVIGUFO_MANHA;user = sa ; pwd = 132";
 
         /// <summary>

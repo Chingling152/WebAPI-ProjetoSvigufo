@@ -34,7 +34,7 @@ namespace Senai.WebAPI.Controllers {
                     // claim : conjunto de chave e valor 
                     new Claim(JwtRegisteredClaimNames.Email,usuario.Email),
                     new Claim(JwtRegisteredClaimNames.Jti,usuario.ID.ToString()),
-                    // new Claim(ClaimTypes.Role,usuario.TipoUsuario.ToString())
+                    new Claim(ClaimTypes.Role,usuario.TipoUsuario)
                 };
 
                 // Chave de acesso do token

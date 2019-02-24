@@ -17,6 +17,6 @@ namespace Senai.WebAPI.Domains {
         public string Senha;
 
         [Required(ErrorMessage ="Insira um tipo de usuario")]
-        public int TipoUsuario;
+        public string TipoUsuario;
     }
 }

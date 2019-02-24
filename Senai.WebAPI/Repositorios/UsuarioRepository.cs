@@ -4,12 +4,38 @@ using System.Data.SqlClient;
 using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
 
-namespace Senai.WebAPI.Repositorios {
+namespace Senai.WebAPI.Repositorios 
+{
+    /// <summary>
+    /// Classe que lida com a inserção , alteração e listagem de usuarios no banco de dados
+    /// </summary>
     public class UsuariosRepository : IUsuariosRepository {
+
+        /// <summary>
+        /// string usada para se comunicar com o banco de dado.    
+        /// Data source = local onde esta o banco de dados . 
+        /// initial catalog = Banco de dado que será usado . 
+        /// user = nome do usuario . 
+        /// pwd = senha do usuario . 
+        /// </summary>
         private const string conexao = "Data Source= .\\SQLEXPRESS ; initial catalog = SENAI_SVIGUFO_MANHA; user id = sa; pwd = 132";
 
+        /// <summary>
+        /// Altera todas as informações de um usuario (Não altera o tipo de usuario)
+        /// </summary>
+        /// <param name="usuario">Usuario com seus novos valores</param>
         public void Alterar(UsuariosDomain usuario) {
-            throw new System.NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(conexao)) {
+                string comando = "UPDATE FROM USUARIOS SET NOME = @NOME,EMAIL = @EMAIL,SENHA = @SENHA WHERE ID = @ID";
+                SqlCommand cmd = new SqlCommand(comando,connection);
+
+                cmd.Parameters.AddWithValue("@NOME",usuario.Nome);
+                cmd.Parameters.AddWithValue("@EMAIL", usuario.Email);
+                cmd.Parameters.AddWithValue("@SENHA", usuario.Senha);
+                cmd.Parameters.AddWithValue("@ID", usuario.ID);
+
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -34,7 +60,7 @@ namespace Senai.WebAPI.Repositorios {
                             Nome = leitor["NOME"].ToString(),
                             Email = leitor["EMAIL"].ToString(),
                             Senha = leitor["SENHA"].ToString(),
-                            TipoUsuario = Convert.ToInt32(leitor["ID_TIPO_USUARIO"])
+                            TipoUsuario = leitor["ID_TIPO_USUARIO"].ToString()
                         };
                     }
                 }
@@ -66,11 +92,30 @@ namespace Senai.WebAPI.Repositorios {
         /// </summary>
         /// <returns></returns>
         public List<UsuariosDomain> Listar() {
-            throw new System.NotImplementedException();
-        }
+            using (SqlConnection connection = new SqlConnection(conexao)) {
+                string comando = "SELECT * FROM VerUsuarios";
+                SqlCommand cmd = new SqlCommand(comando,connection);
+                connection.Open();
 
-        public bool Remover(UsuariosDomain usuario) {
-            throw new System.NotImplementedException();
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (leitor.HasRows) {
+                    List<UsuariosDomain> usuarios = new List<UsuariosDomain>();
+                    while (leitor.Read()) {
+                        usuarios.Add(
+                            new UsuariosDomain() {
+                                ID = Convert.ToInt32(leitor["ID"]),
+                                Nome = leitor["NOME"].ToString(),
+                                Email = leitor["EMAIL"].ToString(),
+                                Senha = leitor["SENHA"].ToString(),
+                                TipoUsuario = leitor["TIPO_USUARIO"].ToString()
+                            }
+                        );
+                    }
+                }
+
+            }
+            return null;
         }
     }
 }

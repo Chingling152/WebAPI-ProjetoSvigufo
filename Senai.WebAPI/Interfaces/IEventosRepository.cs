@@ -5,14 +5,28 @@ using Senai.WebAPI.Domains;
 namespace Senai.WebAPI.Interfaces {
     public interface IEventosRepository {
 
+        /// <summary>
+        /// Lista todos os eventos cadastrados no banco de dados
+        /// </summary>
+        /// <returns>Uma lista de eventos</returns>
         List<EventosDomain> Listar();
     
-        List<EventosDomain> ListarPorData(DateTime data);
+        /// <summary>
+        /// Lista todos os eventos datados para hoje
+        /// </summary>
+        /// <returns>Uma lista de eventos</returns>
+        List<EventosDomain> ListarHoje();
 
+        /// <summary>
+        /// Cadastra um evento no banco de dados
+        /// </summary>
+        /// <param name="evento">Evento que sera cadastrado</param>
         void Inserir(EventosDomain evento);
 
-        void Cancelar(int ID);
-
+        /// <summary>
+        /// Altera as infroamções de um evento
+        /// </summary>
+        /// <param name="evento">Evento com os valores já alterados</param>
         void Alterar(EventosDomain evento);
     }
 }

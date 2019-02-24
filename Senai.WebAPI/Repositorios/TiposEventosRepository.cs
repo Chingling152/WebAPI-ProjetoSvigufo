@@ -6,6 +6,9 @@ using System.Data.SqlClient;
 
 namespace Senai.WebAPI.Repositorios
 {
+    /// <summary>
+    /// Classe que lida com entrada e saida de dados da tabela Tipos de Eventos
+    /// </summary>
     public class TiposEventosRepository : ITiposEventosRepository
     {
         /// <summary>
@@ -17,6 +20,10 @@ namespace Senai.WebAPI.Repositorios
         /// </summary>
         private const string conexao = "Data Source = .\\SqlExpress; initial catalog = SENAI_SVIGUFO_MANHA;user = sa; pwd = 132";
 
+        /// <summary>
+        /// Altera o nome do Tipo de evento
+        /// </summary>
+        /// <param name="evento">TIpo de evento com os valores já alterados</param>
         public void Alterar(TiposEventosDomain evento)
         {
             using (SqlConnection connection = new SqlConnection(conexao))
@@ -58,6 +65,10 @@ namespace Senai.WebAPI.Repositorios
             }
         }
 
+        /// <summary>
+        /// Remove um tipo de evento do banco de dados
+        /// </summary>
+        /// <param name="ID">ID do tipo de evento que será repovido</param>
         public void Deletar(int ID)
         {
             using (SqlConnection connection = new SqlConnection(conexao))
@@ -77,11 +88,9 @@ namespace Senai.WebAPI.Repositorios
         /// <summary>
         /// Lista todos os eventos que estao no banco de dados
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Todos os tipos de eventos existentes</returns>
         public List<TiposEventosDomain> Listar()
         {
-            //cria lista de tipos de evento vazio (para retorno)
-            List<TiposEventosDomain> rt = new List<TiposEventosDomain>();
 
             //usa os comandos o da string conexão para entrar no anco de dados SQL
             using (SqlConnection connection = new SqlConnection(conexao)){
@@ -94,17 +103,20 @@ namespace Senai.WebAPI.Repositorios
                 using (SqlCommand cmd = new SqlCommand(SQLQuery,connection))
                 {
                     reader = cmd.ExecuteReader();//executa o comando do cmd
-                    while (reader.Read())
-                    {
-                        rt.Add(new TiposEventosDomain(){
-                            ID = Convert.ToInt32(reader["ID"]),//o valor vem no tipo object e então deve ser convertido para inteiro
-                            Nome = reader["NOME"].ToString()
-                        });
+                    if (reader.HasRows) {
+                        List<TiposEventosDomain> rt = new List<TiposEventosDomain>();
+                        while (reader.Read())
+                        {
+                            rt.Add(new TiposEventosDomain(){
+                                ID = Convert.ToInt32(reader["ID"]),//o valor vem no tipo object e então deve ser convertido para inteiro
+                                Nome = reader["NOME"].ToString()
+                            });
+                        }
                     }
                 }
             }
 
-            return rt;
+            return null;// retorna nulo se não tiver registros no banco de dados
         }
 
         /// <summary>

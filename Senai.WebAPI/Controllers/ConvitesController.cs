@@ -78,7 +78,7 @@ namespace Senai.WebAPI.Controllers {
         }
 
         [Authorize]
-        [HttpPut("Alterar")]
+        [HttpPut("alterar")]
         public IActionResult AlterarStatus(ConvitesDomain convite) {
             try {
                 repositorio.Alterar(convite);

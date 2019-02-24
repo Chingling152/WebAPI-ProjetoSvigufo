@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Senai.WebAPI.Controllers
 {
@@ -22,21 +23,13 @@ namespace Senai.WebAPI.Controllers
             tiposEventos = new TiposEventosRepository();
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet] //o nome do metodo não importa , pois o que define se ele é get ou set ou outra coisa é o [Http] acima dele
         public IEnumerable<TiposEventosDomain> RetornarView(){
             return tiposEventos.Listar();
         }
 
-        [HttpGet("{ID}")]//Define o parametro na URL
-        public IActionResult BuscarPorID(int ID) {
-            TiposEventosDomain tipoEvento = tiposEventos.ListarPorID(ID);
-
-            if(tipoEvento == null) 
-                return NotFound("O Tipo de evento com este ID não existe");
-            
-            return Ok(tipoEvento);
-        }
-
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public IActionResult CadastrarTipoEvento(TiposEventosDomain tipoevento) 
         {
@@ -47,9 +40,10 @@ namespace Senai.WebAPI.Controllers
                 return BadRequest("Não foi possivel cadastrar o Tipo de Evento\n"+exc.Message);
             }
         }
-        
+
+        [Authorize(Roles = "Administrador")]
         [HttpPut]
-        public IActionResult AtualizarObjeto(TiposEventosDomain EventoAtualizado) {
+        public IActionResult AtualizarTipoEvento(TiposEventosDomain EventoAtualizado) {
             try {
                 tiposEventos.Alterar(EventoAtualizado);
                 return Ok(tiposEventos.Listar());
@@ -58,9 +52,9 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
-        
+        [Authorize(Roles = "Administrador")]
         [HttpDelete("{ID}")]
-        public IActionResult RemoveObect(int ID)
+        public IActionResult RemoverTipoEvento(int ID)
         {
             try {
                 tiposEventos.Deletar(ID);

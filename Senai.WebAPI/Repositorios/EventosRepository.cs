@@ -6,10 +6,24 @@ using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.ViewModels;
 
 namespace Senai.WebAPI.Repositorios {
+    /// <summary>
+    /// Classe usada para inserir , alterar e listar eventos do banco de dados 
+    /// </summary>
     public class EventosRepository : IEventosRepository {
 
+        /// <summary>
+        /// string usada para se comunicar com o banco de dado.  
+        /// Data source = local onde esta o banco de dados . 
+        /// initial catalog = Banco de dado que será usado . 
+        /// user = nome do usuario . 
+        /// pwd = senha do usuario . 
+        /// </summary>
         private const string conexao = "Data Source=.\\SQLEXPRESS; initial catalog = SENAI_SVIGUFO_MANHA;user id = sa; pwd = 132";
 
+        /// <summary>
+        /// Altera as informações de um evento
+        /// </summary>
+        /// <param name="evento">Evento já alterado</param>
         public void Alterar(EventosDomain evento) {
             using (SqlConnection connection = new SqlConnection(conexao)) {
                 string comando = "UPDATE EVENTOS SET NOME = @NOME , DESCRICAO = @DESCRICAO , DATA_EVENTO = @DATA_EVENTO , ACESSO_LIVRE = @ACESSO_LIVRE,ID_INSTITUICAO = @ID_INSTITUICAO,ID_TIPO_EVENTO = @ID_TIPO_EVENTO, CANCELADO = @CANCELADO";
@@ -21,16 +35,15 @@ namespace Senai.WebAPI.Repositorios {
                 cmd.Parameters.AddWithValue("@ID_INSTITUICAO", evento.Instituicao.ID);
                 cmd.Parameters.AddWithValue("@ID_TIPO_EVENTO", evento.TipoEvento.ID);
                 cmd.Parameters.AddWithValue("@ACESSO_LIVRE", evento.AcessoLivre);
-                cmd.Parameters.AddWithValue("@CANCELADO", evento.Cancelado);
 
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public void Cancelar(int ID) {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Insere um novo evento no banco de dados
+        /// </summary>
+        /// <param name="evento">Evento a ser enviado para o banco</param>
         public void Inserir(EventosDomain evento) {
             using(SqlConnection connection = new SqlConnection(conexao)){
                 string comando = "INSERT INTO EVENTOS(NOME,DESCRICAO,DATA_EVENTO,ID_INSTITUICAO,ID_TIPO_EVENTO,ACESSO_LIVRE,CANCELADO) VALUES(@NOME,@DESCRICAO,@DATA_EVENTO,@ID_INSTITUICAO,@ID_TIPO_EVENTO,@ACESSO_LIVRE,@CANCELADO)";
@@ -43,12 +56,15 @@ namespace Senai.WebAPI.Repositorios {
                 cmd.Parameters.AddWithValue("@ID_INSTITUICAO",evento.Instituicao.ID);
                 cmd.Parameters.AddWithValue("@ID_TIPO_EVENTO",evento.TipoEvento.ID);
                 cmd.Parameters.AddWithValue("@ACESSO_LIVRE",evento.AcessoLivre);
-                cmd.Parameters.AddWithValue("@CANCELADO",evento.Cancelado);
 
                 cmd.ExecuteNonQuery();
             }
         }
 
+        /// <summary>
+        /// Mostra todos os eventos salvos no banco de dados
+        /// </summary>
+        /// <returns>Uma list acom todos os eventos do banco de dados</returns>
         public List<EventosDomain> Listar() {
             using (SqlConnection connection = new SqlConnection(conexao)) {
                 string comando = "SELECT * FROM VerEventos";
@@ -85,8 +101,44 @@ namespace Senai.WebAPI.Repositorios {
             }
         }
 
-        public List<EventosDomain> ListarPorData(DateTime data) {
-            throw new NotImplementedException();
+        /// <summary>
+        /// Lista todos eventos no dia de hoje
+        /// </summary>
+        /// <returns>Uma lista de eventos</returns>
+        public List<EventosDomain> ListarHoje() {
+            using (SqlConnection connection = new SqlConnection(conexao)) {
+                string comando = "SELECT * FROM VerEventos WHERE DAY(DATA_EVENTO) = DAY(GETDATE())";
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(comando, connection);
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (!leitor.HasRows)
+                    return null;
+
+                List<EventosDomain> lista = new List<EventosDomain>();
+                while (leitor.Read()) {
+                    lista.Add(
+                        new EventosDomain() {
+                            ID = Convert.ToInt32(leitor["ID"]),
+                            Nome = leitor["EVENTO"].ToString(),
+                            Descricao = leitor["DESCRICAO"].ToString(),
+                            //Criação do objeto TipoEvento
+                            TipoEvento = new TiposEventosViewModel() {
+                                ID = Convert.ToInt32(leitor["ID_TIPO_EVENTO"]),
+                                Nome = leitor["TIPO_EVENTO"].ToString()
+                            },
+                            //Criação do objeto Instituição
+                            Instituicao = new InstituicoesViewModel() {
+                                ID = Convert.ToInt32(leitor["ID_INSTITUICAO"]),
+                                Nome = leitor["INSTITUICAO"].ToString(),
+                            }
+                        }
+                    );
+                }
+                return lista;
+
+            }
         }
     }
 }
