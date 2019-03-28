@@ -5,5 +5,7 @@ namespace Senai.WebAPI.ViewModels {
         [Required(ErrorMessage = "O ID É obrigatorio")]
         public int ID;
         public string Nome;
+        public string CEP;
+        public string Cidade;
     }
 }

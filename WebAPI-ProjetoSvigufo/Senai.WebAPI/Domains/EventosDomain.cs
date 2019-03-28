@@ -1,6 +1,6 @@
-﻿using Senai.WebAPI.ViewModels;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Senai.WebAPI.ViewModels;
 
 namespace Senai.WebAPI.Domains {
     public class EventosDomain {
@@ -12,18 +12,16 @@ namespace Senai.WebAPI.Domains {
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "Insira uma descrição")]
+        [StringLength(maximumLength:400,MinimumLength =0,ErrorMessage ="A Descrição inserida é muito grande")]
         public string Descricao { get; set; }
 
-        //data evento terá um valor padrão (?)
-        public DateTime DataEvento { get; set; }  = DateTime.Now.Add(TimeSpan.FromDays(1)) ;
+        [Required(ErrorMessage ="O Evento precisa de uma data")]
+        [DataType(DataType.DateTime,ErrorMessage ="O Valor inserido não é uma data")]
+        public DateTime DataEvento { get; set; }
 
-        
         public bool AcessoLivre { get ;set; }
-        /* 
-            NA MANEIRA 3 : VOCÊ CRIA UMA VIEWMODEL
-            LÁ TERÁ TODOS OS CAMPOS NECESSARIOS VOCÊ MANDARIA
-        */
+
         public InstituicoesViewModel Instituicao { get; set; }
-        public TiposEventosViewModel TipoEvento { get; set; }
+        public TiposEventosDomain TipoEvento { get; set; }
     }
 }

@@ -73,28 +73,32 @@ namespace Senai.WebAPI.Repositorios {
                 SqlCommand cmd = new SqlCommand(comando,connection);
                 SqlDataReader leitor = cmd.ExecuteReader();
 
-                if (!leitor.HasRows) 
-                    return null;
-                
+                if (!leitor.HasRows)
+                    throw new NullReferenceException("Não existe nenhum evento cadastrado");
+
                 List<EventosDomain> lista = new List<EventosDomain>();
                 while (leitor.Read()) {
                     lista.Add(
-                        new EventosDomain() {
-                            ID = Convert.ToInt32(leitor["ID"]),
-                            Nome = leitor["EVENTO"].ToString(),
-                            Descricao = leitor["DESCRICAO"].ToString(),
+                       new EventosDomain() {
+                           ID = Convert.ToInt32(leitor["EVENTO"]),
+                           Nome = leitor["NOME_EVENTO"].ToString(),
+                           Descricao = leitor["DESCRICAO"].ToString(),
+                           AcessoLivre = Convert.ToBoolean(leitor["ACESSO_LIVRE"]),
+                           DataEvento = Convert.ToDateTime(leitor["DATA_EVENTO"]),
                             //Criação do objeto TipoEvento
-                            TipoEvento = new TiposEventosViewModel() {
-                                ID = Convert.ToInt32(leitor["ID_TIPO_EVENTO"]),
-                                Nome = leitor["TIPO_EVENTO"].ToString()
-                            },
+                            TipoEvento = new TiposEventosDomain() {
+                               ID = Convert.ToInt32(leitor["ID_TIPO_EVENTO"]),
+                               Nome = leitor["TIPO_EVENTO"].ToString()
+                           },
                             //Criação do objeto Instituição
-                            Instituicao = new InstituicoesViewModel(){
-                                ID = Convert.ToInt32(leitor["ID_INSTITUICAO"]),
-                                Nome = leitor["INSTITUICAO"].ToString(),
-                            }
-                        }
-                    );
+                            Instituicao = new InstituicoesViewModel() {
+                               ID = Convert.ToInt32(leitor["INSTITUICAO"]),
+                               Nome = leitor["NOME_INSTITUICAO"].ToString(),
+                               CEP = leitor["CEP"].ToString(),
+                               Cidade = leitor["CIDADE"].ToString()
+                           }
+                       }
+                   );
                 }
                 return lista;
 
@@ -114,24 +118,28 @@ namespace Senai.WebAPI.Repositorios {
                 SqlDataReader leitor = cmd.ExecuteReader();
 
                 if (!leitor.HasRows)
-                    return null;
+                    throw new NullReferenceException("Não existe nenhum evento neste dia");
 
                 List<EventosDomain> lista = new List<EventosDomain>();
                 while (leitor.Read()) {
                     lista.Add(
                         new EventosDomain() {
-                            ID = Convert.ToInt32(leitor["ID"]),
-                            Nome = leitor["EVENTO"].ToString(),
+                            ID = Convert.ToInt32(leitor["EVENTO"]),
+                            Nome = leitor["NOME_EVENTO"].ToString(),
                             Descricao = leitor["DESCRICAO"].ToString(),
+                            AcessoLivre = Convert.ToBoolean(leitor["ACESSO_LIVRE"]),
+                            DataEvento = Convert.ToDateTime(leitor["DATA_EVENTO"]),
                             //Criação do objeto TipoEvento
-                            TipoEvento = new TiposEventosViewModel() {
+                            TipoEvento = new TiposEventosDomain() {
                                 ID = Convert.ToInt32(leitor["ID_TIPO_EVENTO"]),
                                 Nome = leitor["TIPO_EVENTO"].ToString()
                             },
                             //Criação do objeto Instituição
                             Instituicao = new InstituicoesViewModel() {
-                                ID = Convert.ToInt32(leitor["ID_INSTITUICAO"]),
-                                Nome = leitor["INSTITUICAO"].ToString(),
+                                ID = Convert.ToInt32(leitor["INSTITUICAO"]),
+                                Nome = leitor["NOME_INSTITUICAO"].ToString(),
+                                CEP = leitor["CEP"].ToString(),
+                                Cidade = leitor["CIDADE"].ToString()
                             }
                         }
                     );

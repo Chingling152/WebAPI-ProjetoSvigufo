@@ -16,7 +16,6 @@ namespace Senai.WebAPI.Interfaces
         /// </summary>
         /// <param name="evento">Evento a ser cadastrado</param>
         void Cadastrar(TiposEventosDomain evento);
-
         /// <summary>
         /// Altera um tipo de evento cadastrado no banco de dados
         /// </summary>

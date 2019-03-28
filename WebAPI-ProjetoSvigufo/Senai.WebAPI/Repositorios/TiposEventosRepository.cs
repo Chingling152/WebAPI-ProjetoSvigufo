@@ -94,7 +94,7 @@ namespace Senai.WebAPI.Repositorios
 
             //usa os comandos o da string conexão para entrar no anco de dados SQL
             using (SqlConnection connection = new SqlConnection(conexao)){
-                string SQLQuery = "SELECT ID,NOME FROM TIPO_EVENTO";
+                string SQLQuery = "SELECT * FROM TIPOS_EVENTOS";
                 connection.Open();
 
                 SqlDataReader reader;//leitor de SQL
