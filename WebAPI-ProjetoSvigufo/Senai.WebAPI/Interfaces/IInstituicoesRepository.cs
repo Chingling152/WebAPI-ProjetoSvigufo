@@ -3,7 +3,9 @@ using System.Collections.Generic;
 
 namespace Senai.WebAPI.Interfaces
 {
-
+    /// <summary>
+    /// Interface que lida com dados de instituições
+    /// </summary>
     public interface IInstituicoesRepository
     {
         /// <summary>

@@ -10,22 +10,15 @@ namespace Senai.WebAPI.Interfaces
         /// </summary>
         /// <returns>Uma lista contendo todos os eventos</returns>
         List<TiposEventosDomain> Listar();
-
         /// <summary>
         /// Cadastra um evento na lista de eventos
         /// </summary>
-        /// <param name="evento">Evento a ser cadastrado</param>
-        void Cadastrar(TiposEventosDomain evento);
+        /// <param name="Tipoevento">Evento a ser cadastrado</param>
+        void Cadastrar(TiposEventosDomain Tipoevento);
         /// <summary>
         /// Altera um tipo de evento cadastrado no banco de dados
         /// </summary>
-        /// <param name="evento"></param>
-        void Alterar(TiposEventosDomain evento);
-
-        /// <summary>
-        /// Remove o tipo de evento no ID selecionado
-        /// </summary>
-        /// <param name="ID">ID do tipo de evento a ser deletado</param>
-        void Deletar(int ID);
+        /// <param name="Tipoevento">Tipo de evento com os valores ja inseridos</param>
+        void Alterar(TiposEventosDomain Tipoevento);
     }
 }

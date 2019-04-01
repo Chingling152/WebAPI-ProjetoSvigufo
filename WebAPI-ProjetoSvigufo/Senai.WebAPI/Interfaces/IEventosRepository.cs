@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Senai.WebAPI.Domains;
 
 namespace Senai.WebAPI.Interfaces {
@@ -10,6 +9,13 @@ namespace Senai.WebAPI.Interfaces {
         /// </summary>
         /// <returns>Uma lista de eventos</returns>
         List<EventosDomain> Listar();
+
+        /// <summary>
+        /// Mostra todas as informações de um evento selecionado pelo ID
+        /// </summary>
+        /// <param name="ID">ID do evento selecionado</param>
+        /// <returns>Um evento no ID selecionado</returns>
+        EventosDomain Listar(int ID);
     
         /// <summary>
         /// Lista todos os eventos datados para hoje
@@ -24,7 +30,7 @@ namespace Senai.WebAPI.Interfaces {
         void Inserir(EventosDomain evento);
 
         /// <summary>
-        /// Altera as infroamções de um evento
+        /// Altera as informações de um evento
         /// </summary>
         /// <param name="evento">Evento com os valores já alterados</param>
         void Alterar(EventosDomain evento);

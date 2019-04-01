@@ -24,7 +24,7 @@ namespace Senai.WebAPI.Interfaces {
         List<ConvitesDomain> ListarMeusConvites(int ID);
 
         /// <summary>
-        /// Altera as informações de um convite (Destinatario , Evento ou Status)
+        /// Altera as informações de um convite 
         /// </summary>
         /// <param name="convite">Convite com os valores alterados</param>
         void Alterar(ConvitesDomain convite);

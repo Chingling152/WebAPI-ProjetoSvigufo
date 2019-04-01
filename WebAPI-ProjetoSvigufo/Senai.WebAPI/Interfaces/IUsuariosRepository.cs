@@ -7,8 +7,15 @@ namespace Senai.WebAPI.Interfaces {
         /// <summary>
         /// Mostra todos os usuarios cadastrados no banco de dados
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Todos os usuarios do banco de dados</returns>
         List<UsuariosDomain> Listar();
+
+        /// <summary>
+        /// Mostra um usuario no ID enviado por parametro
+        /// </summary>
+        /// <param name="ID">ID Do usuario que será retornado</param>
+        /// <returns>Todas as informações do usuario</returns>
+        UsuariosDomain Listar(int ID);
 
         /// <summary>
         /// Cadastra um usuario no banco de dados
@@ -28,6 +35,6 @@ namespace Senai.WebAPI.Interfaces {
         /// <param name="email">Email do usuario</param>
         /// <param name="senha">Senha do usuario</param>
         /// <returns>Um usuario que tenha o email e senha inseridos , caso não exista , retorna null</returns>
-        UsuariosDomain BuscarPorEmailSenha(string email,string senha);
+        UsuariosDomain Logar(string email,string senha);
     }
 }

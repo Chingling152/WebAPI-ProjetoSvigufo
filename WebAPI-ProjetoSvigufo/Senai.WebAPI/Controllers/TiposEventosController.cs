@@ -7,6 +7,7 @@ using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
 using Microsoft.AspNetCore.Authorization;
+using System.Data.SqlClient;
 
 namespace Senai.WebAPI.Controllers
 {
@@ -23,46 +24,42 @@ namespace Senai.WebAPI.Controllers
             tiposEventos = new TiposEventosRepository();
         }
 
-        [Authorize(Roles = "Administrador")]
         [HttpGet] //o nome do metodo não importa , pois o que define se ele é get ou set ou outra coisa é o [Http] acima dele
-        public IEnumerable<TiposEventosDomain> RetornarView(){
-            return tiposEventos.Listar();
+        public IActionResult Listar(TiposEventosDomain tipoevento) {
+            try {
+                return Ok(tiposEventos.Listar());
+            } catch (SqlException) {
+                return BadRequest("Ocorreu um problema com o banco de dados\nTente novamente mais tarde");
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
         }
 
-        [Authorize(Roles = "Administrador")]
         [HttpPost]
-        public IActionResult CadastrarTipoEvento(TiposEventosDomain tipoevento) 
+        public IActionResult Cadastrar(TiposEventosDomain tipoevento) 
         {
             try {
                 tiposEventos.Cadastrar(tipoevento);
-                return Ok(tiposEventos.Listar());
+                return Ok($"O Tipo de evento {tipoevento.Nome} foi cadastrado com sucesso!");
+            } catch (SqlException exc) {
+                return BadRequest("Ocorreu um problema ao cadastrar o banco de dados\n" + exc.Message);
             } catch (Exception exc){
                 return BadRequest("Não foi possivel cadastrar o Tipo de Evento\n"+exc.Message);
             }
         }
 
-        [Authorize(Roles = "Administrador")]
         [HttpPut]
-        public IActionResult AtualizarTipoEvento(TiposEventosDomain EventoAtualizado) {
+        public IActionResult Atualizar(TiposEventosDomain EventoAtualizado) {
             try {
                 tiposEventos.Alterar(EventoAtualizado);
                 return Ok(tiposEventos.Listar());
-            }catch(Exception exc) {
+            } catch (SqlException exc) {
+                return BadRequest("Ocorreu um problema com o banco de dados\n"+ exc.Message);
+            } catch (Exception exc) {
                 return BadRequest(exc.Message);
-            }
+            } 
         }
 
-        [Authorize(Roles = "Administrador")]
-        [HttpDelete("{ID}")]
-        public IActionResult RemoverTipoEvento(int ID)
-        {
-            try {
-                tiposEventos.Deletar(ID);
-                return Ok(tiposEventos.Listar());
-            }catch(Exception exc) {
-                return BadRequest(exc.Message);
-            }
-        }
         /*
         *  GET     = Buscar
         *  POST    = Enviar
