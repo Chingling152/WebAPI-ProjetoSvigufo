@@ -68,3 +68,17 @@ E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\WebAPI-ProjetoSvigufo\Senai.WebAPI\
 E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\WebAPI-ProjetoSvigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.RazorTargetAssemblyInfo.cache
 E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\WebAPI-ProjetoSvigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.dll
 E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\WebAPI-ProjetoSvigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.pdb
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.csprojAssemblyReference.cache
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.csproj.CoreCompileInputs.cache
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.RazorAssemblyInfo.cache
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.RazorAssemblyInfo.cs
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.AssemblyInfoInputs.cache
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.AssemblyInfo.cs
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.dll
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.pdb
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.deps.json
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.runtimeconfig.json
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.runtimeconfig.dev.json
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.dll
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\bin\Debug\netcoreapp2.1\Senai.WebAPI.pdb
+E:\o\Jogos\Outros\Meus Projetos\APIs\Svigufo\Senai.WebAPI\obj\Debug\netcoreapp2.1\Senai.WebAPI.RazorTargetAssemblyInfo.cache

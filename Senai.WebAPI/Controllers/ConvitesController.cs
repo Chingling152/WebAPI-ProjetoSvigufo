@@ -19,7 +19,6 @@ namespace Senai.WebAPI.Controllers {
             repositorio = new ConvitesRepository();
         }
 
-        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public IActionResult VerConvites(){
             try {	        
@@ -30,43 +29,32 @@ namespace Senai.WebAPI.Controllers {
 	        }
         }
 
-        [Authorize]
         [HttpGet]
-        [Route("Meus")]//muda o caminho do site
+        [Route("meus")]//muda o caminho do site
         public IActionResult VerMeusConvites() {
             try {
                 int ID = Convert.ToInt32(
                     HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value
                 );
-                return Ok(repositorio.ListarMeusConvites(ID));
+                return Ok(repositorio.MeusConvites(ID));
             } catch (Exception exc) {
                 return BadRequest(exc.Message);
             }
         }
 
-        [Authorize]
-        [HttpPost("entrar/{eventoID}")]
-        public IActionResult SeInscrever(int eventoID) {
+        [HttpPost("se_inscrever")]
+        public IActionResult SeInscrever(ConvitesDomain convite) {
             try {
-                ConvitesDomain convite = new ConvitesDomain() {
-                    Evento = new EventosViewModel() {
-                        ID = eventoID
-                    },
-                    Usuario = new UsuariosViewModel() {
-                        ID = Convert.ToInt32(
-                            HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value
-                        )
-                    },
-                    Status = Enums.EnSituacaoConvite.Aguardando
-                };
+                convite.IDUsuario = Convert.ToInt32(
+                    HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value
+                );
                 repositorio.Cadastrar(convite);
-                return Ok("Convite enviado com sucesso!");
+                return Ok("Você se inscreveu nesse evento com sucesso!");
             }catch(Exception exc) {
                 return BadRequest(exc.Message);
             }
         }
 
-        [Authorize]
         [HttpPost("convidar")]
         public IActionResult Convidar(ConvitesDomain convite) {
             try {
@@ -77,8 +65,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
-        [Authorize]
-        [HttpPut("alterar")]
+        [HttpPut]
         public IActionResult AlterarStatus(ConvitesDomain convite) {
             try {
                 repositorio.Alterar(convite);

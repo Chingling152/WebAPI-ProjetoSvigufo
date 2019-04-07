@@ -6,7 +6,7 @@ using Senai.WebAPI.Interfaces;
 
 namespace Senai.WebAPI.Repositorios {
     public class TiposEventosRepository : ITiposEventosRepository {
-        private const string Conexao = "Data Source = .\\NOVOSERVIDOR; Initial Catalog = PROJETO_SVIGUFO;user id = sa;pwd = 132";
+        private const string Conexao = "Data Source = .\\NOVOSERVIDOR; Initial Catalog = PROJETO_SVIGUFO;Integrated Security = true";
 
         /// <summary>
         /// Altera os valores de um tipo de evento no banco de dados

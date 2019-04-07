@@ -5,9 +5,12 @@ using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
 
 namespace Senai.WebAPI.Repositorios {
+    /// <summary>
+    /// Classe que lida com dados relacionado a instituições
+    /// </summary>
     public class InstituicoesRepository : IInstituicoesRepository {
 
-        private const string Conexao = "Data Source = .\\NOVOSERVIDOR; Initial Catalog = PROJETO_SVIGUFO;user id = sa;pwd = 132";
+        private const string Conexao = "Data Source = .\\NOVOSERVIDOR; Initial Catalog = PROJETO_SVIGUFO;Integrated Security = true";
 
         /// <summary>
         /// Busca no banco de dados todas as instituições cadastradas e retorna em forma de lista

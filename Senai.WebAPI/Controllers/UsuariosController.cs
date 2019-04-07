@@ -24,7 +24,6 @@ namespace Senai.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles ="Administrador")]
         public IActionResult CadastrarUsuario(UsuariosDomain usuario) {
             try {
                 repositorio.Cadastrar(usuario);
@@ -79,7 +78,6 @@ namespace Senai.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize("Administrador")]
         public IActionResult Listar() {
             try {
                 return Ok(repositorio.Listar());
@@ -91,7 +89,6 @@ namespace Senai.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public IActionResult Listar(int id) {
             try {
                 return Ok(repositorio.Listar(id));

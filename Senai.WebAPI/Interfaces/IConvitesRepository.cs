@@ -21,7 +21,7 @@ namespace Senai.WebAPI.Interfaces {
         /// </summary>
         /// <param name="ID">ID do usuario</param>
         /// <returns>Uma lista com todos os convites destinados a este ID</returns>
-        List<ConvitesDomain> ListarMeusConvites(int ID);
+        List<ConvitesDomain> MeusConvites(int ID);
 
         /// <summary>
         /// Altera as informações de um convite 

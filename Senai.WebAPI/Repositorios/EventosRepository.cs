@@ -12,7 +12,7 @@ namespace Senai.WebAPI.Repositorios {
     /// </summary>
     public class EventosRepository : IEventosRepository {
 
-        private const string Conexao = "Data Source = .\\NOVOSERVIDOR; Initial Catalog = PROJETO_SVIGUFO;user id = sa;pwd = 132";
+        private const string Conexao = "Data Source = .\\NOVOSERVIDOR; Initial Catalog = PROJETO_SVIGUFO;Integrated Security = true";
 
         /// <summary>
         /// Altera todos os valores de um evento no banco de dados

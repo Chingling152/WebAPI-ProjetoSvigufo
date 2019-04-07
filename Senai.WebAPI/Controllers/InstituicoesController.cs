@@ -19,39 +19,43 @@ namespace Senai.WebAPI.Controllers
             Instituicao = new InstituicoesRepository();
         }
         
-        [Authorize(Roles = "1")]
         [HttpGet]
         public IActionResult ListarInstituicoes() {
-            return Ok(Instituicao.Listar());
+            try { 
+                return Ok(Instituicao.Listar());
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
         }
 
-        [Authorize]
         [HttpGet("{ID}")]
         public IActionResult BuscarPorID(int ID) {
-            InstituicoesDomain valor = Instituicao.BuscarPorId(ID);
-            if (valor == null){
-                return NotFound("Instituição não encontrada");
+            try{
+                return Ok(Instituicao.Listar(ID));
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
             }
-            return Ok(valor);
         }
         
-        [Authorize(Roles = "1")]
         [HttpPost]
         public IActionResult InserirInstituicao(InstituicoesDomain instituicao) {
             try {
-                Instituicao.Inserir(instituicao);
+                Instituicao.Cadastrar(instituicao);
+                return Ok("Instituição cadastrada com sucesso");
             } catch (Exception exc){
                 return BadRequest(exc.Message);
             }
 
-            return Ok(Instituicao.Listar());
         }
-
-        [Authorize]
         [HttpPut]
         public IActionResult AtualizarInstituicao(InstituicoesDomain instituicao) {
-            Instituicao.Editar(instituicao);
-            return Ok(Instituicao.Listar());
+            try {
+                Instituicao.Atualizar(instituicao);
+                return Ok("Instituição atualizada com sucesso");
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+            
         }
 
     }

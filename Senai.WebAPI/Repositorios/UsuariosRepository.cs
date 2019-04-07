@@ -7,7 +7,7 @@ using Senai.WebAPI.Interfaces;
 
 namespace Senai.WebAPI.Repositorios {
     public class UsuariosRepository : IUsuariosRepository {
-        private const string Conexao = "Data Source = .\\NOVOSERVIDOR; Initial Catalog = PROJETO_SVIGUFO;user id = sa;pwd = 132";
+        private const string Conexao = "Data Source = .\\NOVOSERVIDOR; Initial Catalog = PROJETO_SVIGUFO;Integrated Security = true";
 
         /// <summary>
         /// Altera todas as informações de um usuario no banco de dados

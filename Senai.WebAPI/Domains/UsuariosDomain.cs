@@ -20,6 +20,7 @@ namespace Senai.WebAPI.Domains {
         public string Senha;
 
         [Required(ErrorMessage = "Insira um tipo de usuario", AllowEmptyStrings = false)]
+        [Display(Name ="Tipo de usuario",Description ="Quantidade de privilegios de um Usuario")]
         public EnTipoUsuario TipoUsuario;
     }
 }
