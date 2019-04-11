@@ -14,10 +14,10 @@ namespace Senai.WebAPI.Repositorios {
         /// <param name="Tipoevento">Tipo de evento </param>
         public void Alterar(TiposEventosDomain Tipoevento) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "AtualizarTipoEvento @ID @NOME";
+                string comando = "AlterarTipoEvento @ID , @NOME";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
-                cmd.Parameters.AddWithValue("@ID", Tipoevento.ID);
+                cmd.Parameters.AddWithValue("@ID", Tipoevento.ID.ToString());
                 cmd.Parameters.AddWithValue("@NOME", Tipoevento.Nome);
                 cmd.ExecuteNonQuery();
             }

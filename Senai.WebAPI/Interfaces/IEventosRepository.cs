@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Senai.WebAPI.Domains;
+using Senai.WebAPI.ViewModels;
 
 namespace Senai.WebAPI.Interfaces {
     /// <summary>
@@ -35,6 +36,13 @@ namespace Senai.WebAPI.Interfaces {
         /// <param name="tipoEvento">Tipo de evento dos eventos</param>
         /// <returns>Uma lista com todos os tipos de eventos</returns>
         List<EventosDomain> Listar(TiposEventosDomain tipoEvento);
+
+        /// <summary>
+        /// Lista todas os eventos localizados em uma instituição especificada
+        /// </summary>
+        /// <param name="instituicao">Instituição a ser procurada</param>
+        /// <returns>Uma lista de eventos</returns>
+        List<EventosDomain> Listar(InstituicoesViewModel instituicao);
 
         /// <summary>
         /// Cadastra um evento no banco de dados

@@ -70,10 +70,10 @@ namespace Senai.WebAPI.Controllers
         [HttpPost]
         [Route("login")]
         public IActionResult LogarUsuario(LoginViewModel login) {
+            try {
 
             UsuariosDomain usuario = repositorio.Logar(login.Email, login.Senha);
 
-            try {
                 if (usuario == null) {
                     return NotFound("Email ou senha incorretos");
                 }

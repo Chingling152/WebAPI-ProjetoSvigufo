@@ -5,7 +5,7 @@ namespace Senai.WebAPI.Domains {
     public class UsuariosDomain {
         public int ID;
 
-        [RegularExpression("^[a-zA-Z]*$",ErrorMessage = "O Nome do usuario só pode conter letras")]
+        [RegularExpression("^[a-zA-Z ç ~ ã õ ê â î ô ñ û ú í á é ó ü ï ä ö ë]*$", ErrorMessage = "O Nome do usuario só pode conter letras")]
         [Required(ErrorMessage = "Insira um nome", AllowEmptyStrings = false)]
         [StringLength(maximumLength: 250,MinimumLength = 2,ErrorMessage = "O Nome inserido é muito grande ou muito pequeno")]
         public string Nome;

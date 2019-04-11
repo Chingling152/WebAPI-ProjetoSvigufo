@@ -52,7 +52,7 @@ namespace Senai.WebAPI.Controllers
                 tiposEventos.Alterar(EventoAtualizado);
                 return Ok(tiposEventos.Listar());
             } catch (SqlException exc) {
-                return BadRequest("Ocorreu um problema com o banco de dados\n"+ exc.Message);
+                return BadRequest("Ocorreu um problema com o banco de dados\n"+ exc);
             } catch (Exception exc) {
                 return BadRequest(exc.Message);
             } 

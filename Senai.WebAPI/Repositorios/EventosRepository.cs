@@ -157,7 +157,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <returns>Retorna uma lista com todos os eventos com</returns>
         public List<EventosDomain> Listar(DateTime dataInicial, DateTime dataFinal) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM VerEventos WHERE DATA_EVENTO @DATA_INICIAL AND @DATA_FINAL";
+                string comando = "SELECT * FROM VerEventos WHERE DATA_EVENTO > @DATA_INICIAL AND DATA_EVENTO < @DATA_FINAL";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
                 cmd.Parameters.AddWithValue("@DATA_INICIAL", dataInicial.ToShortDateString());
@@ -243,6 +243,53 @@ namespace Senai.WebAPI.Repositorios {
                 }
             }
             throw new NullReferenceException("Não há nenhum evento nesta data");
+        }
+
+        /// <summary>
+        /// Busca todos os eventos do banco de dados de uma instituição
+        /// </summary>
+        /// <param name="instituicao">Instituicao que sera procurada</param>
+        /// <returns>Uma lista com todos os eventos dessa instituição</returns>
+        public List<EventosDomain> Listar(InstituicoesViewModel instituicao) {
+            using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                string comando = "SELECT * FROM VerEventos WHERE INSTITUICAO = @INSTITUICAO";
+                conexao.Open();
+                SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@INSTITUICAO", instituicao.ID);
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (leitor.HasRows) {
+                    List<EventosDomain> eventos = new List<EventosDomain>();
+                    while (leitor.Read()) {
+                        eventos.Add(
+                            new EventosDomain() {
+                                ID = Convert.ToInt32(leitor["EVENTO"]),
+                                Nome = leitor["NOME_EVENTO"].ToString(),
+                                Descricao = leitor["DESCRICAO"].ToString(),
+                                DataEvento = Convert.ToDateTime(leitor["DATA_EVENTO"]),
+                                AcessoLivre = Convert.ToBoolean(leitor["ACESSO_LIVRE"]),
+                                Situacao = (EnSituacaoEvento)Convert.ToInt32(leitor["SITUACAO"]),
+                                IDInstituicao = Convert.ToInt32(leitor["INSTITUICAO"]),
+                                Instituicao = new InstituicoesViewModel() {
+                                    ID = Convert.ToInt32(leitor["INSTITUICAO"]),
+                                    Nome = leitor["NOME_INSTITUICAO"].ToString(),
+                                    Logradouro = leitor["LOCAL"].ToString(),
+                                    CEP = leitor["CEP"].ToString(),
+                                    Cidade = leitor["CIDADE"].ToString(),
+                                    UF = leitor["UF"].ToString()
+                                },
+                                IDTipoEvento = Convert.ToInt32(leitor["ID_TIPO_EVENTO"]),
+                                TipoEvento = new TiposEventosDomain() {
+                                    ID = Convert.ToInt32(leitor["TIPO_EVENTO"]),
+                                    Nome = leitor["ID_TIPO_EVENTO"].ToString()
+                                }
+                            }
+                        );
+                    }
+                    return eventos;
+                }
+            }
+            throw new NullReferenceException("Não há nenhum evento nesta instituição");
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
-        [HttpGet("listar{id}")]
+        [HttpGet("listar/{id}")]
         public IActionResult ListarEventos(int id) {
             try {
                 return Ok(Repository.Listar(id));
@@ -35,8 +35,8 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
-        [HttpPost("listar")]
-        public IActionResult ListarEventos(TiposEventosDomain tipoEvento) {
+        [HttpGet("listar/tipo")]
+        public IActionResult ListaTipo(TiposEventosDomain tipoEvento) {
             try {
                 return Ok(Repository.Listar(tipoEvento));
             } catch (Exception exc) {
@@ -44,7 +44,17 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
-        [HttpGet("listar{dataInicial}{dataFinal}")]
+        [HttpGet("listar/instituicao")]
+        public IActionResult ListarInstituicao(TiposEventosDomain tipoEvento) {
+            try {
+                return Ok(Repository.Listar(tipoEvento));
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
+
+
+        [HttpGet("listardata")]//{dataInicial}/{dataFinal}")]
         public IActionResult ListarEventos(DateTime dataInicial,DateTime dataFinal) {
             try {
                 if(dataFinal < dataInicial) {
@@ -59,6 +69,12 @@ namespace Senai.WebAPI.Controllers {
         [HttpPost("cadastrar")]
         public IActionResult InserirEvento(EventosDomain evento) {
             try {
+                if (evento.Situacao.Equals(EnSituacaoEvento.Terminado) || evento.Situacao.Equals(EnSituacaoEvento.Cancelado)) {
+                    throw new Exception("Você não pode cadastrar um evento cancelado ou que ja terminou");
+                }
+                if(evento.DataEvento < DateTime.Now) {
+                    throw new Exception("A data do evento não pode ser menor do que o dia atual");
+                }
                 Repository.Cadastrar(evento);
                 return Ok(Repository.Listar());
             } catch (Exception exc) {

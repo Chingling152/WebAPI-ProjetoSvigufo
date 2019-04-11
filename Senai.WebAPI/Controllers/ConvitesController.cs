@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Senai.WebAPI.Domains;
+using Senai.WebAPI.Enums;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
 using Senai.WebAPI.ViewModels;
@@ -29,20 +30,36 @@ namespace Senai.WebAPI.Controllers {
 	        }
         }
 
-        [HttpGet]
-        [Route("meus")]//muda o caminho do site
-        public IActionResult VerMeusConvites() {
+        [HttpGet("meusconvites{quantidade}")]//muda o caminho do site
+        public IActionResult VerMeusConvites(int quantidade =10) {//valor padrão de busca
             try {
+                quantidade = quantidade < 1 ? 1 : quantidade;
                 int ID = Convert.ToInt32(
                     HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value
                 );
-                return Ok(repositorio.MeusConvites(ID));
+                return Ok(repositorio.MeusConvites(ID).Take(quantidade));
             } catch (Exception exc) {
                 return BadRequest(exc.Message);
             }
         }
 
-        [HttpPost("se_inscrever")]
+
+        [HttpGet]
+        [Route("meusconvites/pendentes{quantidade}")]
+        public IActionResult VerMeusConvitesPendentes(int quantidade = 10) {
+            try {
+                quantidade = quantidade < 1? 1:quantidade;
+                int ID = Convert.ToInt32(
+                    HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value
+                );
+                return Ok(repositorio.MeusConvites(ID).Where(i=> i.Status.Equals(EnSituacaoConvite.Aguardando)).Take(quantidade));
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
+
+
+        [HttpPost("seinscrever")]
         public IActionResult SeInscrever(ConvitesDomain convite) {
             try {
                 convite.IDUsuario = Convert.ToInt32(
@@ -65,7 +82,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
-        [HttpPut]
+        [HttpPut("alterar")]
         public IActionResult AlterarStatus(ConvitesDomain convite) {
             try {
                 repositorio.Alterar(convite);

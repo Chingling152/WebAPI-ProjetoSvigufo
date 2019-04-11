@@ -1,4 +1,5 @@
 ﻿using Senai.WebAPI.Domains;
+using System;
 using System.Collections.Generic;
 
 namespace Senai.WebAPI.Interfaces {

@@ -35,7 +35,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <returns>Retorna um usuario qu tenha a senha e o email igual oas inseridos nos parametros</returns>
         public UsuariosDomain Logar(string email, string senha) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM USUARIO WHERE EMAIL = @EMAIL AND SENHA = @SENHA";
+                string comando = "SELECT * FROM USUARIOS WHERE EMAIL = @EMAIL AND SENHA = @SENHA";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
                 cmd.Parameters.AddWithValue("@EMAIL", email);
@@ -81,7 +81,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <returns>Uma lista com todos os usuarios do banco de dados</returns>
         public List<UsuariosDomain> Listar() {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM USUARIO";
+                string comando = "SELECT * FROM USUARIOS";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
                 SqlDataReader leitor = cmd.ExecuteReader();
@@ -112,7 +112,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <returns>Retorna o usuario se ele existir , senão retorna uma NullReferenceException</returns>
         public UsuariosDomain Listar(int ID) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM USUARIO WHERE ID = @ID";
+                string comando = "SELECT * FROM USUARIOS WHERE ID = @ID";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
                 cmd.Parameters.AddWithValue("@ID", ID);

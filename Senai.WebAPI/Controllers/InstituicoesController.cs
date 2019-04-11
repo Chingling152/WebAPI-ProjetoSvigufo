@@ -28,7 +28,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{ID}")]
+        [HttpGet("listar/{ID}")]
         public IActionResult BuscarPorID(int ID) {
             try{
                 return Ok(Instituicao.Listar(ID));

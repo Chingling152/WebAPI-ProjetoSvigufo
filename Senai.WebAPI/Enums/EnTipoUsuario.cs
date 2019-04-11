@@ -8,12 +8,12 @@
         /// </summary>
         Usuario = 1,
         /// <summary>
-        /// Representa um usuario palestrante , pode criar eventos e tudo que o usuario comum pode fazer
+        /// Representa um usuario organizador de eventos , pode criar eventos e tudo que o usuario comum pode fazer
         /// </summary>
-        Palestrante = 2,
+        Organizador = 2,
         /// <summary>
         /// Representa um administrador do sistema , pode alterar e visualizar todos os dados
         /// </summary>
-        Administrador = 3
+        Administrador = 10
     }
 }
