@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 using Senai.WebAPI.Domains;
 using Senai.WebAPI.Enums;
 using Senai.WebAPI.Interfaces;
@@ -14,20 +14,16 @@ namespace Senai.WebAPI.Repositorios {
         /// </summary>
         /// <param name="usuario">Usuario a ser alterado (precisa ter o ID)</param>
         public void Alterar(UsuariosDomain usuario) {
-            if(usuario.ID != 0) { 
-                using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                    string comando = "AlterarUsuario @ID, @NOME , @EMAIL , @SENHA , @TIPO_USUARIO";
-                    conexao.Open();
-                    SqlCommand cmd = new SqlCommand(comando, conexao);
-                    cmd.Parameters.AddWithValue("@ID",usuario.ID);
-                    cmd.Parameters.AddWithValue("@NOME", usuario.Nome);
-                    cmd.Parameters.AddWithValue("@EMAIL", usuario.Email);
-                    cmd.Parameters.AddWithValue("@SENHA", usuario.Senha);
-                    cmd.Parameters.AddWithValue("@TIPO_USUARIO", (int)usuario.TipoUsuario);
-                    cmd.ExecuteNonQuery();
-                }
-            } else {
-                throw new Exception("Você precisa especificar o ID do usuario que você quer alterar");
+            using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                string comando = "AlterarUsuario @ID, @NOME , @EMAIL , @SENHA , @TIPO_USUARIO";
+                conexao.Open();
+                SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@ID", usuario.ID);
+                cmd.Parameters.AddWithValue("@NOME", usuario.Nome);
+                cmd.Parameters.AddWithValue("@EMAIL", usuario.Email);
+                cmd.Parameters.AddWithValue("@SENHA", usuario.Senha);
+                cmd.Parameters.AddWithValue("@TIPO_USUARIO", (int)usuario.TipoUsuario);
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -100,7 +96,7 @@ namespace Senai.WebAPI.Repositorios {
                               Email = leitor["EMAIL"].ToString(),
                               Senha = leitor["SENHA"].ToString(),
                               TipoUsuario = (EnTipoUsuario)Convert.ToInt32(leitor["TIPO_USUARIO"])
-                          }  
+                          }
                         );
                     }
                     return Usuarios;
@@ -119,18 +115,18 @@ namespace Senai.WebAPI.Repositorios {
                 string comando = "SELECT * FROM USUARIO WHERE ID = @ID";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
-                cmd.Parameters.AddWithValue("@ID",ID);
+                cmd.Parameters.AddWithValue("@ID", ID);
 
                 SqlDataReader leitor = cmd.ExecuteReader();
 
                 if (leitor.HasRows) {
                     while (leitor.Read()) {
                         return new UsuariosDomain() {
-                              ID = Convert.ToInt32(leitor["ID"]),
-                              Nome = leitor["NOME"].ToString(),
-                              Email = leitor["EMAIL"].ToString(),
-                              Senha = leitor["SENHA"].ToString(),
-                              TipoUsuario = (EnTipoUsuario)Convert.ToInt32(leitor["TIPO_USUARIO"])
+                            ID = Convert.ToInt32(leitor["ID"]),
+                            Nome = leitor["NOME"].ToString(),
+                            Email = leitor["EMAIL"].ToString(),
+                            Senha = leitor["SENHA"].ToString(),
+                            TipoUsuario = (EnTipoUsuario)Convert.ToInt32(leitor["TIPO_USUARIO"])
                         };
                     }
                 }

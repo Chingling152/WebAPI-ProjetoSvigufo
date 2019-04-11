@@ -12,11 +12,12 @@ namespace Senai.WebAPI.Domains {
 
         [Required(ErrorMessage = "Insira um email", AllowEmptyStrings = false)]
         [StringLength(maximumLength: 250, MinimumLength = 5, ErrorMessage = "O email inserido é muito grande ou muito pequeno")]
-        [DataType(DataType.EmailAddress,ErrorMessage = "O Valor inserido não é um email valido")]
+        [EmailAddress(ErrorMessage = "O Valor inserido não é um email valido")]
         public string Email;
 
         [Required(ErrorMessage = "Insira uma senha",AllowEmptyStrings =false)]
         [StringLength(maximumLength:250,MinimumLength = 8,ErrorMessage = "A Senha é muito grande ou muito pequena")]
+        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "A senha deve conter numeros e letras")]
         public string Senha;
 
         [Required(ErrorMessage = "Insira um tipo de usuario", AllowEmptyStrings = false)]

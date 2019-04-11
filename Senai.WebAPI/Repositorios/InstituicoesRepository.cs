@@ -82,7 +82,6 @@ namespace Senai.WebAPI.Repositorios {
         /// </summary>
         /// <param name="instituicao">Instituição com os valores já alterados</param>
         public void Atualizar(InstituicoesDomain instituicao) {
-            if(instituicao.ID != 0) {
                 using (SqlConnection conexao = new SqlConnection(Conexao)) {
                     string comando = "Atualizar @ID , @NOME_FANTASIA , @RAZAO_SOCIAL , @CNPJ , @LOGRADOURO , @CEP , @UF , @CIDADE";
                     conexao.Open();
@@ -97,7 +96,7 @@ namespace Senai.WebAPI.Repositorios {
                     cmd.Parameters.AddWithValue("@CIDADE", instituicao.Cidade);
                     cmd.ExecuteNonQuery();
                 }
-            }
+            
         }
 
         /// <summary>

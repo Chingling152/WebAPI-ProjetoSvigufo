@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
-using System;
 
 namespace Senai.WebAPI.Controllers
 {
@@ -19,7 +19,7 @@ namespace Senai.WebAPI.Controllers
             Instituicao = new InstituicoesRepository();
         }
         
-        [HttpGet]
+        [HttpGet("listar")]
         public IActionResult ListarInstituicoes() {
             try { 
                 return Ok(Instituicao.Listar());
@@ -37,8 +37,8 @@ namespace Senai.WebAPI.Controllers
             }
         }
         
-        [HttpPost]
-        public IActionResult InserirInstituicao(InstituicoesDomain instituicao) {
+        [HttpPost("cadastrar")]
+        public IActionResult CadastrarInstituicao(InstituicoesDomain instituicao) {
             try {
                 Instituicao.Cadastrar(instituicao);
                 return Ok("Instituição cadastrada com sucesso");
@@ -47,9 +47,12 @@ namespace Senai.WebAPI.Controllers
             }
 
         }
-        [HttpPut]
+        [HttpPut("alterar")]
         public IActionResult AtualizarInstituicao(InstituicoesDomain instituicao) {
             try {
+                if(instituicao.ID == 0) {
+                    throw new Exception("Você precisa especificar qual instituição quer alterar");
+                }
                 Instituicao.Atualizar(instituicao);
                 return Ok("Instituição atualizada com sucesso");
             } catch (Exception exc) {

@@ -30,6 +30,13 @@ namespace Senai.WebAPI.Interfaces {
         List<EventosDomain> Listar(DateTime dataInicial, DateTime dataFinal);
 
         /// <summary>
+        /// Lista todos os eventos de um tipo de evento especifico 
+        /// </summary>
+        /// <param name="tipoEvento">Tipo de evento dos eventos</param>
+        /// <returns>Uma lista com todos os tipos de eventos</returns>
+        List<EventosDomain> Listar(TiposEventosDomain tipoEvento);
+
+        /// <summary>
         /// Cadastra um evento no banco de dados
         /// </summary>
         /// <param name="evento">Evento que sera cadastrado</param>

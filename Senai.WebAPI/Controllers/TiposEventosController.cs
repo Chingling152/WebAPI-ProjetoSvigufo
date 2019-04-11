@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-using System;
-using System.Collections.Generic;
-
+﻿using System;
 using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Data.SqlClient;
 
@@ -24,18 +21,16 @@ namespace Senai.WebAPI.Controllers
             tiposEventos = new TiposEventosRepository();
         }
 
-        [HttpGet] //o nome do metodo não importa , pois o que define se ele é get ou set ou outra coisa é o [Http] acima dele
-        public IActionResult Listar(TiposEventosDomain tipoevento) {
+        [HttpGet("listar")] //o nome do metodo não importa , pois o que define se ele é get ou set ou outra coisa é o [Http] acima dele
+        public IActionResult Listar() {
             try {
                 return Ok(tiposEventos.Listar());
-            } catch (SqlException) {
-                return BadRequest("Ocorreu um problema com o banco de dados\nTente novamente mais tarde");
             } catch (Exception exc) {
                 return BadRequest(exc.Message);
             }
         }
 
-        [HttpPost]
+        [HttpPost("cadastrar")]
         public IActionResult Cadastrar(TiposEventosDomain tipoevento) 
         {
             try {
@@ -48,9 +43,12 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("alterar")]
         public IActionResult Atualizar(TiposEventosDomain EventoAtualizado) {
             try {
+                if(EventoAtualizado.ID == 0)
+                    throw new Exception("Você precisa especificar o ID do tipo de evento");
+
                 tiposEventos.Alterar(EventoAtualizado);
                 return Ok(tiposEventos.Listar());
             } catch (SqlException exc) {

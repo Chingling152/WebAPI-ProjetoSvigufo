@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Senai.WebAPI.Domains;
@@ -23,7 +24,7 @@ namespace Senai.WebAPI.Controllers
             repositorio = new UsuariosRepository();
         }
 
-        [HttpPost]
+        [HttpPost("cadastrar")]
         public IActionResult CadastrarUsuario(UsuariosDomain usuario) {
             try {
                 repositorio.Cadastrar(usuario);
@@ -35,8 +36,39 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [HttpPut("alterar")]
+        public IActionResult AlterarUsuario(UsuariosDomain usuario) {
+            try {
+                if(usuario.ID == 0)
+                    throw new Exception("É necessario especificar o ID do usuario que será alterado");
+
+                repositorio.Alterar(usuario);
+                return Ok($"Usuario {usuario.Nome} alterado com sucesso");
+            } catch (SqlException exc) {
+                return BadRequest("Ocorreu um erro no banco de dados\n" + exc.Message);
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
+
+        [HttpPut("alterar")]
+        public IActionResult AlterarUsuario() {
+            try {
+                int ID = Convert.ToInt32(
+                    HttpContext.User.Claims.First(i => i.Type == JwtRegisteredClaimNames.Jti).Value
+                );
+
+                repositorio.Alterar(repositorio.Listar(ID));
+                return Ok("Suas informações foram alteradas com sucesso");
+            } catch (SqlException exc) {
+                return BadRequest("Ocorreu um erro no banco de dados\n" + exc.Message);
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
+
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         public IActionResult LogarUsuario(LoginViewModel login) {
 
             UsuariosDomain usuario = repositorio.Logar(login.Email, login.Senha);
@@ -77,7 +109,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("listar")]
         public IActionResult Listar() {
             try {
                 return Ok(repositorio.Listar());
@@ -88,7 +120,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("listar/{id}")]
         public IActionResult Listar(int id) {
             try {
                 return Ok(repositorio.Listar(id));
