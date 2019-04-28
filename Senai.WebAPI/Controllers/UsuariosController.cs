@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Data.SqlClient;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Senai.WebAPI.Domains;
@@ -8,7 +9,6 @@ using Senai.WebAPI.Repositorios;
 using Senai.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Data.SqlClient;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Senai.WebAPI.Controllers

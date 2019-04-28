@@ -1,4 +1,5 @@
 ﻿using Senai.WebAPI.Domains;
+using Senai.WebAPI.ViewModels;
 using System.Collections.Generic;
 
 namespace Senai.WebAPI.Interfaces
@@ -13,6 +14,13 @@ namespace Senai.WebAPI.Interfaces
         /// </summary>
         /// <returns>Uma lista com os dados de todas as instituições</returns>
         List<InstituicoesDomain> Listar();
+        
+        /// <summary>
+        /// Lista todas as instituições que tenha um nome parecido com o inserido
+        /// </summary>
+        /// <param name="Nome">Nome fantasia da instituição</param>
+        /// <returns>Retorna uma lista com todas as instituições com o nome parecido com o inserido</returns>
+        List<InstituicoesViewModel> Listar(string nome);
 
         /// <summary>
         /// Retorna todos os dados de uma instituição selecionada pelo ID

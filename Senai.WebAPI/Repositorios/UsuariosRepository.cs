@@ -133,5 +133,37 @@ namespace Senai.WebAPI.Repositorios {
             }
             throw new NullReferenceException("Não existe usuario no ID selecionado");
         }
+        
+        /// <summary>
+        /// Filtra a lista de usuarios no banco de dados e retorna apenas com um tipo de usuario selecionado
+        /// </summary>
+        /// <param name="tipoUsuario">Tipo de usuario que todos devem ter</param>
+        /// <returns>Retorna uma lista de usuarios com o mesmo nivel de privilegios</returns>
+        public List<UsuariosDomain> Listar(EnTipoUsuario tipoUsuario) {
+            using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                string comando = "EXEC VerUsuarios @TIPO_USUARIO";
+                conexao.Open();
+                SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@TIPO_USUARIO",(int)tipoUsuario);
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (leitor.HasRows) {
+                    List<UsuariosDomain> Usuarios = new List<UsuariosDomain>();
+                    while (leitor.Read()) {
+                        Usuarios.Add(
+                          new UsuariosDomain() {
+                              ID = Convert.ToInt32(leitor["ID"]),
+                              Nome = leitor["NOME"].ToString(),
+                              Email = leitor["EMAIL"].ToString(),
+                              Senha = leitor["SENHA"].ToString(),
+                              TipoUsuario = (EnTipoUsuario)Convert.ToInt32(leitor["TIPO_USUARIO"])
+                          }
+                        );
+                    }
+                    return Usuarios;
+                }
+            }
+            throw new NullReferenceException($"Não existe nenhum usuario do tipo {tipoUsuario.ToString()}");
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Senai.WebAPI.Domains;
+using Senai.WebAPI.Enums;
 using System.Collections.Generic;
 
 namespace Senai.WebAPI.Interfaces {
@@ -16,6 +17,13 @@ namespace Senai.WebAPI.Interfaces {
         /// <param name="ID">ID Do usuario que será retornado</param>
         /// <returns>Todas as informações do usuario</returns>
         UsuariosDomain Listar(int ID);
+
+        /// <summary>
+        /// Procura todos os usuarios 
+        /// </summary>
+        /// <param name="tipoUsuario">Tipo de Usuario usado na filtragem</param>
+        /// <returns>Uma lista com todos os usuarios de um mesmo tipo</returns>
+        List<UsuariosDomain> Listar(EnTipoUsuario tipoUsuario);
 
         /// <summary>
         /// Cadastra um usuario no banco de dados

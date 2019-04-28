@@ -21,7 +21,7 @@ namespace Senai.WebAPI.Repositorios {
         public void Alterar(EventosDomain evento) {
             if (evento.ID != 0) {
                 using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                    string comando = "AlterarEvento @ID, @NOME , @DESCRICAO , @DATA_EVENTO , @ACESSO_LIVRE , @SITUACAO , @ID_INSTITUICAO , @ID_TIPO_EVENTO ";
+                    string comando = "EXEC AlterarEvento @ID, @NOME , @DESCRICAO , @DATA_EVENTO , @ACESSO_LIVRE , @SITUACAO , @ID_INSTITUICAO , @ID_TIPO_EVENTO ";
                     conexao.Open();
                     SqlCommand cmd = new SqlCommand(comando, conexao);
                     cmd.Parameters.AddWithValue("@ID", evento.ID);
@@ -45,7 +45,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <param name="evento">Evento a ser cadastrado</param>
         public void Cadastrar(EventosDomain evento) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "CriarEvento @NOME , @DESCRICAO , @DATA_EVENTO , @ACESSO_LIVRE , @SITUACAO , @ID_INSTITUICAO , @ID_TIPO_EVENTO ";
+                string comando = "EXEC CriarEvento @NOME , @DESCRICAO , @DATA_EVENTO , @ACESSO_LIVRE , @SITUACAO , @ID_INSTITUICAO , @ID_TIPO_EVENTO ";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
                 cmd.Parameters.AddWithValue("@NOME", evento.Nome);

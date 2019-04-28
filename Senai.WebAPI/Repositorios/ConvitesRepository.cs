@@ -16,7 +16,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <param name="convite">Convite a ser alterado</param>
         public void Alterar(ConvitesDomain convite) {
             using(SqlConnection connection = new SqlConnection(Conexao)) {
-                string comando = "AlterarConvite @ID, @ID_USUARIO , @ID_EVENTO, @SITUACAO , @PALESTRANTE";
+                string comando = "EXEC AlterarConvite @ID, @ID_USUARIO , @ID_EVENTO, @SITUACAO , @PALESTRANTE";
                 connection.Open();
                 SqlCommand cmd = new SqlCommand(comando,connection);
                 cmd.Parameters.AddWithValue("@ID",convite.ID);
@@ -35,7 +35,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <param name="convite">Convite a ser cadastrado</param>
         public void Cadastrar(ConvitesDomain convite) {
             using (SqlConnection connection = new SqlConnection(Conexao)) {
-                string comando = "InserirConvite @ID, @ID_USUARIO , @ID_EVENTO, @SITUACAO , @PALESTRANTE";
+                string comando = "EXEC InserirConvite @ID, @ID_USUARIO , @ID_EVENTO, @SITUACAO , @PALESTRANTE";
                 connection.Open();
                 SqlCommand cmd = new SqlCommand(comando, connection);
                 cmd.Parameters.AddWithValue("@ID_USUARIO", convite.IDUsuario);
@@ -48,7 +48,7 @@ namespace Senai.WebAPI.Repositorios {
         }
 
         /// <summary>
-        /// Lista todos os convites do banco de dados
+        /// Lista todos os convites do banco de dados (ordenados por data (recente -> antigo))
         /// </summary>
         /// <returns>Uma lista com todos os convites do banco de dados</returns>
         public List<ConvitesDomain> Listar() {
@@ -81,13 +81,83 @@ namespace Senai.WebAPI.Repositorios {
         }
 
         /// <summary>
-        /// Lista todos os convites de um determinado usuario
+        /// Retorna todas as informações de um convite
         /// </summary>
-        /// <param name="ID">ID do usuario selecionado</param>
-        /// <returns>Uma lista com todos os convites de um usuario</returns>
-        public List<ConvitesDomain> MeusConvites(int ID) {
+        /// <param name="ID">ID do convite</param>
+        /// <returns>Um convite no ID selecionado , se não existir nenhum , retorna uma NullReferenceException</returns>
+        public ConvitesDomain Listar(int ID) {
+                using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                    string comando = "EXEC VerConvite @ID";
+                    conexao.Open();
+                    SqlCommand cmd = new SqlCommand(comando, conexao);
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    SqlDataReader leitor = cmd.ExecuteReader();
+
+                    if (leitor.HasRows) {
+                        while (leitor.Read()) {
+                            return new ConvitesDomain() {
+                                ID = Convert.ToInt32(leitor["ID"]),
+                                IDEvento = Convert.ToInt32(leitor["ID_EVENTO"]),
+                                Evento = new EventosRepository().Listar(Convert.ToInt32(leitor["ID_EVENTO"])),
+                                IDUsuario = Convert.ToInt32(leitor["ID_USUARIO"]),
+                                Usuario = new UsuariosRepository().Listar(Convert.ToInt32(leitor["ID_EVENTO"])),
+                                Status = (EnSituacaoConvite)Convert.ToInt32(leitor["SITUACAO"]),
+                                Palestrante = Convert.ToBoolean(leitor["PALESTRANTE"])
+                            };
+                        }
+                    }
+                }
+
+                throw new NullReferenceException("Não Existe convite com este ID");
+        }
+
+        /// <summary>
+        /// Lista uma certa quantidade de convites
+        /// </summary>
+        /// <param name="pagina">Quantos registros serão pulados</param>
+        /// <param name="quantidade">Quantidade de registros que será retornado</param>
+        /// <returns>Retorna uma quantidade de convites a partir de um certo registro</returns>
+        public List<ConvitesDomain> Listar(int pagina, int quantidade) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM CONVITES WHERE ID = @ID";
+                string comando = "EXEC VerTodosConvites @PAGINA , @QUANTIDADE";
+                conexao.Open();
+                SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@PAGINA",pagina);
+                cmd.Parameters.AddWithValue("@QUANTIDADE", quantidade);
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (leitor.HasRows) {
+                    List<ConvitesDomain> Convites = new List<ConvitesDomain>();
+                    while (leitor.Read()) {
+                        Convites.Add(
+                            new ConvitesDomain() {
+                                ID = Convert.ToInt32(leitor["ID"]),
+                                IDEvento = Convert.ToInt32(leitor["ID_EVENTO"]),
+                                Evento = new EventosRepository().Listar(Convert.ToInt32(leitor["ID_EVENTO"])),
+                                IDUsuario = Convert.ToInt32(leitor["ID_USUARIO"]),
+                                Usuario = new UsuariosRepository().Listar(Convert.ToInt32(leitor["ID_EVENTO"])),
+                                Status = (EnSituacaoConvite)Convert.ToInt32(leitor["SITUACAO"]),
+                                Palestrante = Convert.ToBoolean(leitor["PALESTRANTE"])
+                            }
+                        );
+                    }
+                    return Convites;
+                }
+            }
+
+            throw new NullReferenceException("Não existe Convites nesta pagina");
+        }
+
+
+
+        /// <summary>
+        /// Lista todos os convidados de um evento
+        /// </summary>
+        /// <param name="ID">ID do evento</param>
+        /// <returns>Uma lista com todos os convidados do evento</returns>
+        public List<ConvitesDomain> ListarConvidados(int ID) {
+            using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                string comando = "EXEC VerTodosConvidados @ID";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
                 cmd.Parameters.AddWithValue("@ID", ID);
@@ -112,7 +182,122 @@ namespace Senai.WebAPI.Repositorios {
                 }
             }
 
-            throw new NullReferenceException("Você não tem nenhum convite");
+            throw new NullReferenceException("Não há nenhuam pessoa convidada");
+        }
+
+        /// <summary>
+        /// Lista todos os convidades de um determinado evento
+        /// </summary>
+        /// <param name="ID">ID do evento</param>
+        /// <param name="pagina">A partir de qual convite será retornado</param>
+        /// <param name="quantidade">Quantos convites serão retornados</param>
+        /// <returns>Uma lista com todos os convidados de um determinado evento</returns>
+        public List<ConvitesDomain> ListarConvidados(int ID, int pagina, int quantidade) {
+            using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                string comando = "EXEC VerConvidados @ID , @PAGINA , @QUANTIDADE";
+                conexao.Open();
+                SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@ID", ID);
+                cmd.Parameters.AddWithValue("@PAGINA", pagina);
+                cmd.Parameters.AddWithValue("@QUANTIDADE", quantidade);
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (leitor.HasRows) {
+                    List<ConvitesDomain> Convites = new List<ConvitesDomain>();
+                    while (leitor.Read()) {
+                        Convites.Add(
+                            new ConvitesDomain() {
+                                ID = Convert.ToInt32(leitor["ID"]),
+                                IDEvento = Convert.ToInt32(leitor["ID_EVENTO"]),
+                                Evento = new EventosRepository().Listar(Convert.ToInt32(leitor["ID_EVENTO"])),
+                                IDUsuario = Convert.ToInt32(leitor["ID_USUARIO"]),
+                                Usuario = new UsuariosRepository().Listar(Convert.ToInt32(leitor["ID_EVENTO"])),
+                                Status = (EnSituacaoConvite)Convert.ToInt32(leitor["SITUACAO"]),
+                                Palestrante = Convert.ToBoolean(leitor["PALESTRANTE"])
+                            }
+                        );
+                    }
+                    return Convites;
+                }
+            }
+
+            throw new NullReferenceException("Não há convidados");
+        }
+
+        /// <summary>
+        /// Lista uma certa quantidade de convites de um usuario
+        /// </summary>
+        /// <param name="ID">ID do usuario</param>
+        /// <param name="pagina">quantidade de registos que serão pulados</param>
+        /// <param name="quant">quantidade de registros que serão retornados (apos os ignorados)</param>
+        /// <returns>Uma lista com todos os convites deste usuario</returns>
+        public List<ConvitesDomain> MeusConvites(int ID, int pagina, int quant) {
+            using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                string comando = "EXEC VerMeusConvites @ID , @PAGINA , @QUANTIDADE";
+                conexao.Open();
+                SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@ID", ID);
+                cmd.Parameters.AddWithValue("@PAGINA", pagina);
+                cmd.Parameters.AddWithValue("@QUANTIDADE", quant);
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (leitor.HasRows) {
+                    List<ConvitesDomain> Convites = new List<ConvitesDomain>();
+                    while (leitor.Read()) {
+                        Convites.Add(
+                            new ConvitesDomain() {
+                                ID = Convert.ToInt32(leitor["ID"]),
+                                IDEvento = Convert.ToInt32(leitor["ID_EVENTO"]),
+                                Evento = new EventosRepository().Listar(Convert.ToInt32(leitor["ID_EVENTO"])),
+                                IDUsuario = Convert.ToInt32(leitor["ID_USUARIO"]),
+                                Status = (EnSituacaoConvite)Convert.ToInt32(leitor["SITUACAO"]),
+                                Palestrante = Convert.ToBoolean(leitor["PALESTRANTE"])
+                            }
+                        );
+                    }
+                    return Convites;
+                }
+            }
+
+            throw new NullReferenceException("Nenhum convite encontrado");
+        }
+
+        /// <summary>
+        /// Seleciona uam quantidade de eventos Palestradas de um Usuario
+        /// </summary>
+        /// <param name="ID">ID do usuario</param>
+        /// <param name="pagina">quantidade de registos que serão pulados</param>
+        /// <param name="quant">quantidade de registros que serão retornados (apos os ignorados)</param>
+        /// <returns>Uma lista com todos os eventos palestrados Pelo usuario</returns>
+        public List<ConvitesDomain> MinhasPalestras(int ID, int pagina, int quant) {
+            using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                string comando = "EXEC VerMinhasPalestras @ID , @PAGINA , @QUANTIDADE";
+                conexao.Open();
+                SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@ID", ID);
+                cmd.Parameters.AddWithValue("@PAGINA", pagina);
+                cmd.Parameters.AddWithValue("@QUANTIDADE", quant);
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (leitor.HasRows) {
+                    List<ConvitesDomain> Convites = new List<ConvitesDomain>();
+                    while (leitor.Read()) {
+                        Convites.Add(
+                            new ConvitesDomain() {
+                                ID = Convert.ToInt32(leitor["ID"]),
+                                IDEvento = Convert.ToInt32(leitor["ID_EVENTO"]),
+                                Evento = new EventosRepository().Listar(Convert.ToInt32(leitor["ID_EVENTO"])),
+                                IDUsuario = Convert.ToInt32(leitor["ID_USUARIO"]),
+                                Status = (EnSituacaoConvite)Convert.ToInt32(leitor["SITUACAO"]),
+                                Palestrante = Convert.ToBoolean(leitor["PALESTRANTE"])
+                            }
+                        );
+                    }
+                    return Convites;
+                }
+            }
+
+            throw new NullReferenceException("Nenhum convite encontrado");
         }
     }
 }

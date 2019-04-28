@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Collections.Generic;
 using Senai.WebAPI.Domains;
 using Senai.WebAPI.Interfaces;
+using Senai.WebAPI.ViewModels;
 
 namespace Senai.WebAPI.Repositorios {
     /// <summary>
@@ -53,9 +54,10 @@ namespace Senai.WebAPI.Repositorios {
         /// <returns>Uma instituição que esteja cadastrada no ID selecionado , ou retorna null caso não exista registros neste ID</returns>
         public InstituicoesDomain Listar(int id) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM INSTITUICOES";
+                string comando = "EXEC VerInstituicao @ID";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@ID",id);
                 SqlDataReader leitor = cmd.ExecuteReader();
 
                 if (leitor.HasRows) {
@@ -83,7 +85,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <param name="instituicao">Instituição com os valores já alterados</param>
         public void Atualizar(InstituicoesDomain instituicao) {
                 using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                    string comando = "Atualizar @ID , @NOME_FANTASIA , @RAZAO_SOCIAL , @CNPJ , @LOGRADOURO , @CEP , @UF , @CIDADE";
+                    string comando = "EXEC AtualizarInstituicao @ID , @NOME_FANTASIA , @RAZAO_SOCIAL , @CNPJ , @LOGRADOURO , @CEP , @UF , @CIDADE";
                     conexao.Open();
                     SqlCommand cmd = new SqlCommand(comando, conexao);
                     cmd.Parameters.AddWithValue("@ID", instituicao.ID);
@@ -105,7 +107,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <param name="instituicao">Instituição a ser cadastrada</param>
         public void Cadastrar(InstituicoesDomain instituicao) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "CriarInstituicao @NOME_FANTASIA , @RAZAO_SOCIAL , @CNPJ , @LOGRADOURO , @CEP , @UF , @CIDADE";
+                string comando = "EXEC CriarInstituicao @NOME_FANTASIA , @RAZAO_SOCIAL , @CNPJ , @LOGRADOURO , @CEP , @UF , @CIDADE";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
                 cmd.Parameters.AddWithValue("@NOME_FANTASIA", instituicao.NomeFantasia);
@@ -117,6 +119,40 @@ namespace Senai.WebAPI.Repositorios {
                 cmd.Parameters.AddWithValue("@CIDADE", instituicao.Cidade);
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        /// <summary>
+        /// Metodo usado por usuarios para pesquisa de instituições
+        /// </summary>
+        /// <param name="nome">Nome da instituição ser procurada</param>
+        /// <returns>Retorna todas as instituições com o nome parecido com o pesquisado</returns>
+        public List<InstituicoesViewModel> Listar(string nome) {
+            using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                string comando = "EXEC VerInstituicoes @NOME_FANTASIA";
+                conexao.Open();
+                SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@NOME_FANTASIA",nome);
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (leitor.HasRows) {
+                    List<InstituicoesViewModel> instituicoes = new List<InstituicoesViewModel>();
+                    while (leitor.Read()) {
+                        instituicoes.Add(
+                            new InstituicoesViewModel() {
+                                ID = Convert.ToInt32(leitor["ID"]),
+                                Nome = leitor["NOME_FANTASIA"].ToString(),
+                                CEP = leitor["CEP"].ToString(),
+                                Logradouro = leitor["LOGRADOURO"].ToString(),
+                                Cidade = leitor["CIDADE"].ToString(),
+                                UF = leitor["UF"].ToString(),
+                            }
+                        );
+                    }
+                    return instituicoes;
+                }
+
+            }
+            throw new NullReferenceException("Não existe Instituições cadastradas no banco de dados");
         }
     }
 }

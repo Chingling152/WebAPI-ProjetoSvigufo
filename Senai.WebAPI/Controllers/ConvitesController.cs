@@ -29,37 +29,21 @@ namespace Senai.WebAPI.Controllers {
 		        return BadRequest(exc.Message);
 	        }
         }
-
-        [HttpGet("meusconvites{quantidade}")]//muda o caminho do site
-        public IActionResult VerMeusConvites(int quantidade =10) {//valor padrão de busca
+    
+        [HttpGet("{pagina}{quantidade}")]
+        public IActionResult VerConvites(int pagina = 0, int quantidade = 10) {
             try {
+                pagina = pagina < 0? 0: pagina;
                 quantidade = quantidade < 1 ? 1 : quantidade;
-                int ID = Convert.ToInt32(
-                    HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value
-                );
-                return Ok(repositorio.MeusConvites(ID).Take(quantidade));
+                return Ok(repositorio.Listar(pagina,quantidade));
             } catch (Exception exc) {
                 return BadRequest(exc.Message);
             }
         }
 
 
-        [HttpGet]
-        [Route("meusconvites/pendentes{quantidade}")]
-        public IActionResult VerMeusConvitesPendentes(int quantidade = 10) {
-            try {
-                quantidade = quantidade < 1? 1:quantidade;
-                int ID = Convert.ToInt32(
-                    HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value
-                );
-                return Ok(repositorio.MeusConvites(ID).Where(i=> i.Status.Equals(EnSituacaoConvite.Aguardando)).Take(quantidade));
-            } catch (Exception exc) {
-                return BadRequest(exc.Message);
-            }
-        }
-
-
-        [HttpPost("seinscrever")]
+        [HttpPost]
+        [Route("inscricao")]
         public IActionResult SeInscrever(ConvitesDomain convite) {
             try {
                 convite.IDUsuario = Convert.ToInt32(
@@ -72,9 +56,13 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
-        [HttpPost("convidar")]
+        [HttpPost]
+        [Route("convidar")]
         public IActionResult Convidar(ConvitesDomain convite) {
             try {
+                new UsuariosRepository().Listar(convite.IDUsuario);
+                new EventosRepository().Listar(convite.ID);
+
                 repositorio.Cadastrar(convite);
                 return Ok("Convite enviado com sucesso!");
             } catch (Exception exc) {

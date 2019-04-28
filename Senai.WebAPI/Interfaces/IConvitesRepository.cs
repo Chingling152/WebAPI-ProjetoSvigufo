@@ -1,15 +1,45 @@
 ﻿using Senai.WebAPI.Domains;
-using System;
 using System.Collections.Generic;
 
 namespace Senai.WebAPI.Interfaces {
     public interface IConvitesRepository {
 
         /// <summary>
-        /// Lista todos os convites
+        /// Lista todos os convites ordenados por data
         /// </summary>
         /// <returns>Uma lista com todos os convites do banco de dados</returns>
         List<ConvitesDomain> Listar();
+
+        /// <summary>
+        /// Lista um unico convite
+        /// </summary>
+        /// <param name="ID">ID do Convite</param>
+        /// <returns>Retorna todas as informações de um convite</returns>
+        ConvitesDomain Listar(int ID);
+
+        /// <summary>
+        /// Lista uma certa quantidade de convites
+        /// </summary>
+        /// <param name="pagina">A partir de qual registro será contado</param>
+        /// <param name="quantidade">Quantidade de convites que serão retornados</param>
+        /// <returns>Uma lista com N convites do banco de dados</returns>
+        List<ConvitesDomain> Listar(int pagina,int quantidade);
+
+        /// <summary>
+        /// Retorna todos os convidados de um convite
+        /// </summary>
+        /// <param name="ID">ID do evento</param>
+        /// <returns>Uma lista com todos os convites do evento</returns>
+        List<ConvitesDomain> ListarConvidados(int ID);
+        
+        /// <summary>
+        /// Lista uma quantidade convidados do evento
+        /// </summary>
+        /// <param name="ID">ID do evento</param>
+        /// <param name="pagina">Quantos registros serão pulados (ignorados)</param>
+        /// <param name="quantidade">Quantos registros serão retornados</param>
+        /// <returns>Retorna uma lista com N[quantidade] convites a partir do M[pagina] registro</returns>
+        List<ConvitesDomain> ListarConvidados(int ID,int pagina, int quantidade);
 
         /// <summary>
         /// Cadastra um convite no banco de dados
@@ -18,11 +48,20 @@ namespace Senai.WebAPI.Interfaces {
         void Cadastrar(ConvitesDomain convite);
 
         /// <summary>
-        /// Lista todos os convites de um certo usuario
+        /// Lista uma quantidade de convites de um Usuario
         /// </summary>
         /// <param name="ID">ID do usuario</param>
-        /// <returns>Uma lista com todos os convites destinados a este ID</returns>
-        List<ConvitesDomain> MeusConvites(int ID);
+        /// <param name="quant">quantidade de convites que será retornado</param>
+        /// <param name="pagina">A partir de qual registro será contado</param>
+        /// <returns>Retorna N convites de um usuario a partir de N registro</returns>
+        List<ConvitesDomain> MeusConvites(int ID, int pagina, int quant);
+
+        /// <summary>
+        /// Lista todos os eventos de um usuario onde ele é o palestrante
+        /// </summary>
+        /// <param name="ID">ID do usuario</param>
+        /// <returns>Retorna uma lista com todos os eventos de um palestrante</returns>
+        List<ConvitesDomain> MinhasPalestras(int ID, int pagina, int quant);
 
         /// <summary>
         /// Altera as informações de um convite 
