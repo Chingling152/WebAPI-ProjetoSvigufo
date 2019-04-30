@@ -19,7 +19,7 @@ namespace Senai.WebAPI.Controllers
             Instituicao = new InstituicoesRepository();
         }
         
-        [HttpGet("listar")]
+        [HttpGet("listar/todos")]
         public IActionResult ListarInstituicoes() {
             try { 
                 return Ok(Instituicao.Listar());
@@ -28,10 +28,10 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
-        [HttpGet("listar/{ID}")]
-        public IActionResult BuscarPorID(int ID) {
+        [HttpGet("listar/{id}")]
+        public IActionResult BuscarPorID(int id) {
             try{
-                return Ok(Instituicao.Listar(ID));
+                return Ok(Instituicao.Listar(id));
             } catch (Exception exc) {
                 return BadRequest(exc.Message);
             }

@@ -4,6 +4,7 @@ using Senai.WebAPI.Domains;
 using Senai.WebAPI.Enums;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
+using Senai.WebAPI.ViewModels;
 
 namespace Senai.WebAPI.Controllers {
     [Produces("application/json")]
@@ -17,7 +18,7 @@ namespace Senai.WebAPI.Controllers {
             Repository = new EventosRepository();
         }
 
-        [HttpGet("listar")]
+        [HttpGet("listar/todos")]
         public IActionResult ListarEventos() {
             try {
                 return Ok(Repository.Listar());
@@ -45,16 +46,16 @@ namespace Senai.WebAPI.Controllers {
         }
 
         [HttpGet("listar/instituicao")]
-        public IActionResult ListarInstituicao(TiposEventosDomain tipoEvento) {
+        public IActionResult ListarInstituicao(InstituicoesViewModel instituicao) {
             try {
-                return Ok(Repository.Listar(tipoEvento));
+                return Ok(Repository.Listar(instituicao));
             } catch (Exception exc) {
                 return BadRequest(exc.Message);
             }
         }
 
 
-        [HttpGet("listardata")]//{dataInicial}/{dataFinal}")]
+        [HttpGet("listar/data/{dataInicial}/{dataFinal}")]
         public IActionResult ListarEventos(DateTime dataInicial,DateTime dataFinal) {
             try {
                 if(dataFinal < dataInicial) {
@@ -85,12 +86,8 @@ namespace Senai.WebAPI.Controllers {
         [HttpPut("alterar")]
         public IActionResult AlterarEvento(EventosDomain evento) {
             try {
-                if(evento.ID == 0) {
-                    throw new Exception("Você precisa especificar qual evento deseja alterar");
-                }
-
-                if(evento.Situacao.Equals(EnSituacaoEvento.Terminado) || evento.Situacao.Equals(EnSituacaoEvento.Cancelado)) {
-                    throw new Exception("Você não pode alterar um evento que ja ocorreu ou foi cancelado");
+                if(evento.Situacao.Equals(EnSituacaoEvento.Terminado)) {
+                    throw new Exception("Você não pode alterar um evento que ja ocorreu");
                 }
 
                 Repository.Alterar(evento);

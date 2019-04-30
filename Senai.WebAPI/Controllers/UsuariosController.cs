@@ -51,7 +51,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
-        [HttpPut("alterar")]
+        [HttpPut("alterar/minhasinformacoes")]
         public IActionResult AlterarUsuario() {
             try {
                 int ID = Convert.ToInt32(

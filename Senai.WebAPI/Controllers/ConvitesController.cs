@@ -20,8 +20,19 @@ namespace Senai.WebAPI.Controllers {
             repositorio = new ConvitesRepository();
         }
 
-        [HttpGet]
-        public IActionResult VerConvites(){
+        [HttpGet("listar/{pagina}/{quantidade}")]
+        public IActionResult VerConvites(int pagina = 0, int quantidade = 10) {
+            try {
+                pagina = pagina < 0 ? 0 : pagina;
+                quantidade = quantidade < 2 ? 2 : quantidade;
+                return Ok(repositorio.Listar(pagina, quantidade));
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
+
+        [HttpGet("listar/todos")]
+        public IActionResult VerTodosConvites(){
             try {	        
 		        return Ok(repositorio.Listar());
 	        }
@@ -29,18 +40,65 @@ namespace Senai.WebAPI.Controllers {
 		        return BadRequest(exc.Message);
 	        }
         }
-    
-        [HttpGet("{pagina}{quantidade}")]
-        public IActionResult VerConvites(int pagina = 0, int quantidade = 10) {
+   
+
+        [HttpGet("listar/convidados/{id}/todos")]
+        public IActionResult VerTodosConvidados(int id) {
             try {
-                pagina = pagina < 0? 0: pagina;
-                quantidade = quantidade < 1 ? 1 : quantidade;
-                return Ok(repositorio.Listar(pagina,quantidade));
+                return Ok(repositorio.ListarConvidados(id));
             } catch (Exception exc) {
                 return BadRequest(exc.Message);
             }
         }
 
+        [HttpGet("listar/convidados/{id}/{pagina}/{quantidade}")]
+        public IActionResult VerConvidados(int id,int pagina = 0, int quantidade = 10) {
+            try {
+                pagina = pagina < 0 ? 0 : pagina;
+                quantidade = quantidade < 2 ? 2 : quantidade;
+                return Ok(repositorio.ListarConvidados(id,pagina, quantidade));
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
+
+        [HttpGet("listar/{id}")]
+        public IActionResult VerConvite(int id) {
+            try {
+                return Ok(repositorio.Listar(id));
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
+        
+
+        [HttpGet("listar/meusconvites/{pagina}/{quantidade}")]
+        public IActionResult MeusConvites(int pagina = 0, int quantidade = 10) {
+            try {
+                pagina = pagina < 0 ? 0 : pagina;
+                int ID = Convert.ToInt32(
+                    HttpContext.User.Claims.First(i => i.Type == JwtRegisteredClaimNames.Jti).Value
+                );
+                quantidade = quantidade < 2 ? 2 : quantidade;
+                return Ok(repositorio.MeusConvites(ID,pagina,quantidade));
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
+
+        [HttpGet("listar/minhaspalestras/{pagina}/{quantidade}")]
+        public IActionResult MinhasPalestras(int pagina = 0, int quantidade = 10) {
+            try {
+                pagina = pagina < 0 ? 0 : pagina;
+                int ID = Convert.ToInt32(
+                    HttpContext.User.Claims.First(i => i.Type == JwtRegisteredClaimNames.Jti).Value
+                );
+                quantidade = quantidade < 2 ? 2 : quantidade;
+                return Ok(repositorio.MinhasPalestras(ID, pagina, quantidade));
+            } catch (Exception exc) {
+                return BadRequest(exc.Message);
+            }
+        }
 
         [HttpPost]
         [Route("inscricao")]
