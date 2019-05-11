@@ -7,11 +7,10 @@ using Senai.WebAPI.Domains;
 using Senai.WebAPI.Enums;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
-using Senai.WebAPI.ViewModels;
 
 namespace Senai.WebAPI.Controllers {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("v2/api/[controller]")]
     [ApiController]
     public class ConvitesController : ControllerBase {
         public readonly IConvitesRepository repositorio;
@@ -20,6 +19,7 @@ namespace Senai.WebAPI.Controllers {
             repositorio = new ConvitesRepository();
         }
 
+        [Authorize]
         [HttpGet("listar/{pagina}/{quantidade}")]
         public IActionResult VerConvites(int pagina = 0, int quantidade = 10) {
             try {
@@ -27,7 +27,7 @@ namespace Senai.WebAPI.Controllers {
                 quantidade = quantidade < 2 ? 2 : quantidade;
                 return Ok(repositorio.Listar(pagina, quantidade));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -37,7 +37,7 @@ namespace Senai.WebAPI.Controllers {
 		        return Ok(repositorio.Listar());
 	        }
 	        catch (Exception exc){
-		        return BadRequest(exc.Message);
+		        return BadRequest(new{erro = exc.Message});
 	        }
         }
    
@@ -47,7 +47,7 @@ namespace Senai.WebAPI.Controllers {
             try {
                 return Ok(repositorio.ListarConvidados(id));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -58,7 +58,7 @@ namespace Senai.WebAPI.Controllers {
                 quantidade = quantidade < 2 ? 2 : quantidade;
                 return Ok(repositorio.ListarConvidados(id,pagina, quantidade));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -67,7 +67,7 @@ namespace Senai.WebAPI.Controllers {
             try {
                 return Ok(repositorio.Listar(id));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
         
@@ -82,7 +82,21 @@ namespace Senai.WebAPI.Controllers {
                 quantidade = quantidade < 2 ? 2 : quantidade;
                 return Ok(repositorio.MeusConvites(ID,pagina,quantidade));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
+            }
+        }
+
+        [HttpGet("listar/meusconvites/{pagina}/{quantidade}/{situacao}")]
+        public IActionResult MeusConvitesSituacao(int pagina = 0, int quantidade = 10,EnSituacaoConvite situacao = EnSituacaoConvite.Aguardando) {
+            try {
+                pagina = pagina < 0 ? 0 : pagina;
+                int ID = Convert.ToInt32(
+                    HttpContext.User.Claims.First(i => i.Type == JwtRegisteredClaimNames.Jti).Value
+                );
+                quantidade = quantidade < 2 ? 2 : quantidade;
+                return Ok(repositorio.MeusConvites(ID, pagina, quantidade,situacao));
+            } catch (Exception exc) {
+                return BadRequest(new { erro = exc.Message });
             }
         }
 
@@ -96,7 +110,7 @@ namespace Senai.WebAPI.Controllers {
                 quantidade = quantidade < 2 ? 2 : quantidade;
                 return Ok(repositorio.MinhasPalestras(ID, pagina, quantidade));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -110,7 +124,7 @@ namespace Senai.WebAPI.Controllers {
                 repositorio.Cadastrar(convite);
                 return Ok("Você se inscreveu nesse evento com sucesso!");
             }catch(Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -124,7 +138,7 @@ namespace Senai.WebAPI.Controllers {
                 repositorio.Cadastrar(convite);
                 return Ok("Convite enviado com sucesso!");
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -134,7 +148,7 @@ namespace Senai.WebAPI.Controllers {
                 repositorio.Alterar(convite);
                 return Ok("Convite alterado com sucesso com sucesso!");
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 

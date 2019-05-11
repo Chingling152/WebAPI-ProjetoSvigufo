@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Senai.WebAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("v2/api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase
     {
@@ -32,7 +32,7 @@ namespace Senai.WebAPI.Controllers
             } catch (SqlException exc) {
                 return BadRequest("Ocorreu um erro no banco de dados\n" + exc.Message);
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -47,7 +47,7 @@ namespace Senai.WebAPI.Controllers
             } catch (SqlException exc) {
                 return BadRequest("Ocorreu um erro no banco de dados\n" + exc.Message);
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -63,12 +63,11 @@ namespace Senai.WebAPI.Controllers
             } catch (SqlException exc) {
                 return BadRequest("Ocorreu um erro no banco de dados\n" + exc.Message);
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("login")]
         public IActionResult LogarUsuario(LoginViewModel login) {
             try {
 
@@ -83,7 +82,8 @@ namespace Senai.WebAPI.Controllers
                     // claim : conjunto de chave e valor 
                     new Claim(JwtRegisteredClaimNames.Email,usuario.Email),
                     new Claim(JwtRegisteredClaimNames.Jti,usuario.ID.ToString()),
-                    new Claim(ClaimTypes.Role,usuario.TipoUsuario.ToString())
+                    new Claim(ClaimTypes.Role,usuario.TipoUsuario.ToString()),
+                    new Claim("Role",usuario.TipoUsuario.ToString())
                 };
 
                 // Chave de acesso do token
@@ -105,7 +105,7 @@ namespace Senai.WebAPI.Controllers
                     Token = new JwtSecurityTokenHandler().WriteToken(token)//cria o token
                 });
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -116,7 +116,7 @@ namespace Senai.WebAPI.Controllers
             } catch (SqlException exc) {
                 return BadRequest("Ocorreu um erro no banco de dados\n" + exc.Message);
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -127,7 +127,7 @@ namespace Senai.WebAPI.Controllers
             } catch (SqlException exc) {
                 return BadRequest("Ocorreu um erro no banco de dados\n" + exc.Message);
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
     }

@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 namespace Senai.WebAPI.Controllers
 {
     [Produces("application/json")]//Define a saida como JSON 
-    [Route("api/[controller]")]//local onde sera encontrado a api
+    [Route("v2/api/[controller]")]//local onde sera encontrado a api
     [ApiController]//indica que a classe abaixo é uma API
     public class TiposEventosController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace Senai.WebAPI.Controllers
             try {
                 return Ok(tiposEventos.Listar());
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -54,7 +54,7 @@ namespace Senai.WebAPI.Controllers
             } catch (SqlException exc) {
                 return BadRequest("Ocorreu um problema com o banco de dados\n"+ exc);
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             } 
         }
 

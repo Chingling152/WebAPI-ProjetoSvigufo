@@ -8,7 +8,7 @@ using Senai.WebAPI.Repositorios;
 namespace Senai.WebAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("v2/api/[controller]")]
     [ApiController]
     public class InstituicoesController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Senai.WebAPI.Controllers
             try { 
                 return Ok(Instituicao.Listar());
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -33,17 +33,29 @@ namespace Senai.WebAPI.Controllers
             try{
                 return Ok(Instituicao.Listar(id));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new {erro = exc.Message});
             }
         }
-        
+
+        [HttpGet("listar/{nome}")]
+        public IActionResult BuscarPorNome(string nome) {
+            try {
+                if (string.IsNullOrWhiteSpace(nome)) {
+                    throw new NullReferenceException("O Nome não pode ser nulo");
+                }
+                return Ok(Instituicao.Listar(nome));
+            } catch (Exception exc) {
+                return BadRequest(new{erro = exc.Message});
+            }
+        }
+
         [HttpPost("cadastrar")]
         public IActionResult CadastrarInstituicao(InstituicoesDomain instituicao) {
             try {
                 Instituicao.Cadastrar(instituicao);
                 return Ok("Instituição cadastrada com sucesso");
             } catch (Exception exc){
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
 
         }
@@ -56,7 +68,7 @@ namespace Senai.WebAPI.Controllers
                 Instituicao.Atualizar(instituicao);
                 return Ok("Instituição atualizada com sucesso");
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
             
         }

@@ -66,9 +66,58 @@ namespace Senai.WebAPI.Repositorios {
         /// <returns>Uma lista com todos os eventos do banco de dados</returns>
         public List<EventosDomain> Listar() {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM VerEventos";
+                string comando = "EXEC VerTodosEventos";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
+                SqlDataReader leitor = cmd.ExecuteReader();
+
+                if (leitor.HasRows) {
+                    List<EventosDomain> eventos = new List<EventosDomain>();
+                    while (leitor.Read()) {
+                        eventos.Add(
+                            new EventosDomain() {
+                                ID = Convert.ToInt32(leitor["EVENTO"]),
+                                Nome = leitor["NOME_EVENTO"].ToString(),
+                                Descricao = leitor["DESCRICAO"].ToString(),
+                                DataEvento = Convert.ToDateTime(leitor["DATA_EVENTO"]),
+                                AcessoLivre = Convert.ToBoolean(leitor["ACESSO_LIVRE"]),
+                                Situacao = (EnSituacaoEvento)Convert.ToInt32(leitor["SITUACAO"]),
+                                IDInstituicao = Convert.ToInt32(leitor["INSTITUICAO"]),
+                                Instituicao = new InstituicoesViewModel() {
+                                    ID = Convert.ToInt32(leitor["INSTITUICAO"]),
+                                    Nome = leitor["NOME_INSTITUICAO"].ToString(),
+                                    Logradouro = leitor["LOCAL"].ToString(),
+                                    CEP = leitor["CEP"].ToString(),
+                                    Cidade = leitor["CIDADE"].ToString(),
+                                    UF = leitor["UF"].ToString()
+                                },
+                                IDTipoEvento = Convert.ToInt32(leitor["ID_TIPO_EVENTO"]),
+                                TipoEvento = new TiposEventosDomain() {
+                                    ID = Convert.ToInt32(leitor["TIPO_EVENTO"]),
+                                    Nome = leitor["ID_TIPO_EVENTO"].ToString()
+                                }
+                            }
+                        );
+                    }
+                    return eventos;
+                }
+            }
+            throw new NullReferenceException("Não existe nenhum evento cadastrado no banco de dados");
+        }
+
+        /// <summary>
+        /// Lista uma quantidade de Eventos
+        /// </summary>
+        /// <param name="quantidade">Quantidade de eventos</param>
+        /// <param name="pagina">Quantos eventos serão ignorados antes de começar a contagem</param>
+        /// <returns>Uma lista com N eventos</returns>
+        public List<EventosDomain> Listar(int quantidade, int pagina) {
+            using (SqlConnection conexao = new SqlConnection(Conexao)) {
+                string comando = "EXEC VerQuantidadeEventos @PAGINA, @QUANTIDADE";
+                conexao.Open();
+                SqlCommand cmd = new SqlCommand(comando, conexao);
+                cmd.Parameters.AddWithValue("@PAGINA",pagina);
+                cmd.Parameters.AddWithValue("@QUANTIDADE", quantidade);
                 SqlDataReader leitor = cmd.ExecuteReader();
 
                 if (leitor.HasRows) {
@@ -112,7 +161,7 @@ namespace Senai.WebAPI.Repositorios {
         /// <returns>Retorna um evento com todas as informações</returns>
         public EventosDomain Listar(int ID) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM VerEventos WHERE ID = @ID";
+                string comando = "EXEC VerEvento @ID";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
                 cmd.Parameters.AddWithValue("@ID", ID);
@@ -150,18 +199,22 @@ namespace Senai.WebAPI.Repositorios {
         }
 
         /// <summary>
-        /// Lista todos os eventos existentes em um intervalo de tempo
+        /// Lista até existentes em um intervalo de tempo
         /// </summary>
         /// <param name="dataInicial">Data inicial da procura. Não pode ser maior do que a dataFinal</param>
         /// <param name="dataFinal">Data final da procura. Não pode ser menor do que a dataInicial</param>
+        /// <param name="quantidade">Quantidade de eventos</param>
+        /// <param name="pagina">Quantos eventos serão ignorados antes de começar a contagem</param>
         /// <returns>Retorna uma lista com todos os eventos com</returns>
-        public List<EventosDomain> Listar(DateTime dataInicial, DateTime dataFinal) {
+        public List<EventosDomain> Listar(DateTime dataInicial, DateTime dataFinal,int quantidade, int pagina) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM VerEventos WHERE DATA_EVENTO > @DATA_INICIAL AND DATA_EVENTO < @DATA_FINAL";
+                string comando = "EXEC VerEventosEntreDatas @DATA_INICAL , @DATA_FINAL , @PAGINA, @QUANTIDADE";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
-                cmd.Parameters.AddWithValue("@DATA_INICIAL", dataInicial.ToShortDateString());
-                cmd.Parameters.AddWithValue("@DATA_FINAL", dataFinal.ToShortDateString());
+                cmd.Parameters.AddWithValue("@DATA_INICIAL", dataInicial);
+                cmd.Parameters.AddWithValue("@DATA_FINAL", dataFinal);
+                cmd.Parameters.AddWithValue("@PAGINA", pagina);
+                cmd.Parameters.AddWithValue("@QUANTIDADE", quantidade);
                 SqlDataReader leitor = cmd.ExecuteReader();
 
                 if (leitor.HasRows) {
@@ -199,16 +252,20 @@ namespace Senai.WebAPI.Repositorios {
         }
 
         /// <summary>
-        /// Busca todos os eventos do banco de dados que são de um tipo de evento
+        /// Busca uma quantidade eventos do banco de dados que são de um tipo de evento
         /// </summary>
-        /// <param name="tipoEvento">Tipo de evento que será filtrado</param>
+        /// <param name="tipoEvento">ID do Tipo de evento que será filtrado</param>
+        /// <param name="quantidade">Quantidade de eventos</param>
+        /// <param name="pagina">Quantos eventos serão ignorados antes de começar a contagem</param>
         /// <returns>Uma lista de eventos com o mesmo tipo de evento</returns>
-        public List<EventosDomain> Listar(TiposEventosDomain tipoEvento) {
+        public List<EventosDomain> ListarTipo(int tipoEvento, int quantidade, int pagina) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM VerEventos WHERE TIPO_EVENTO = @TIPO_EVENTO";
+                string comando = "EXEC VerEventosPorTipo @TIPO_EVENTO , @PAGINA , @QUANTIDADE";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
-                cmd.Parameters.AddWithValue("@TIPO_EVENTO", tipoEvento.ID);
+                cmd.Parameters.AddWithValue("@TIPO_EVENTO", tipoEvento);
+                cmd.Parameters.AddWithValue("@PAGINA", pagina);
+                cmd.Parameters.AddWithValue("@QUANTIDADE", quantidade);
                 SqlDataReader leitor = cmd.ExecuteReader();
 
                 if (leitor.HasRows) {
@@ -246,16 +303,18 @@ namespace Senai.WebAPI.Repositorios {
         }
 
         /// <summary>
-        /// Busca todos os eventos do banco de dados de uma instituição
+        /// Busca uma quantidade de eventos do banco de dados de uma instituição
         /// </summary>
         /// <param name="instituicao">Instituicao que sera procurada</param>
         /// <returns>Uma lista com todos os eventos dessa instituição</returns>
-        public List<EventosDomain> Listar(InstituicoesViewModel instituicao) {
+        public List<EventosDomain> ListarInstituicao(int instituicao, int quantidade, int pagina) {
             using (SqlConnection conexao = new SqlConnection(Conexao)) {
-                string comando = "SELECT * FROM VerEventos WHERE INSTITUICAO = @INSTITUICAO";
+                string comando = "EXEC VerEventosDeInstituicao @INSTITUICAO , @PAGINA , @QUANTIDADE";
                 conexao.Open();
                 SqlCommand cmd = new SqlCommand(comando, conexao);
-                cmd.Parameters.AddWithValue("@INSTITUICAO", instituicao.ID);
+                cmd.Parameters.AddWithValue("@INSTITUICAO", instituicao);
+                cmd.Parameters.AddWithValue("@PAGINA", pagina);
+                cmd.Parameters.AddWithValue("@QUANTIDADE", quantidade);
                 SqlDataReader leitor = cmd.ExecuteReader();
 
                 if (leitor.HasRows) {

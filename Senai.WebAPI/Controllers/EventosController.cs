@@ -8,7 +8,7 @@ using Senai.WebAPI.ViewModels;
 
 namespace Senai.WebAPI.Controllers {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("v2/api/[controller]")]
     [ApiController]
     public class EventosController : ControllerBase{
 
@@ -19,11 +19,22 @@ namespace Senai.WebAPI.Controllers {
         }
 
         [HttpGet("listar/todos")]
-        public IActionResult ListarEventos() {
+        public IActionResult ListarEventos(int quantidade = 10, int pagina = 10) {
+            try {
+                quantidade = quantidade < 1 ? 2 : quantidade;
+                pagina = pagina < 0 ? 0 : pagina;
+                return Ok(Repository.Listar(quantidade,pagina));
+            }catch(Exception exc) {
+                return BadRequest(new{erro = exc.Message});
+            }
+        }
+
+        [HttpGet("listar/{quantidade}/{pagina}")]
+        public IActionResult Listar(int quantidade = 10, int pagina = 10) {
             try {
                 return Ok(Repository.Listar());
-            }catch(Exception exc) {
-                return BadRequest(exc.Message);
+            } catch (Exception exc) {
+                return BadRequest(new { erro = exc.Message });
             }
         }
 
@@ -32,38 +43,44 @@ namespace Senai.WebAPI.Controllers {
             try {
                 return Ok(Repository.Listar(id));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
-        [HttpGet("listar/tipo")]
-        public IActionResult ListaTipo(TiposEventosDomain tipoEvento) {
+        [HttpGet("listar/tipo/{tipoEvento}/{quantidade}/{pagina}")]
+        public IActionResult ListarTipo(int tipoEvento, int quantidade = 10, int pagina = 10) {
             try {
-                return Ok(Repository.Listar(tipoEvento));
+                quantidade= quantidade < 1? 2: quantidade;
+                pagina = pagina<0? 0 : pagina;
+                return Ok(Repository.ListarTipo(tipoEvento,quantidade, pagina));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
-        [HttpGet("listar/instituicao")]
-        public IActionResult ListarInstituicao(InstituicoesViewModel instituicao) {
+        [HttpGet("listar/instituicao/{instituicao}/{quantidade}/{pagina}")]
+        public IActionResult ListarInstituicao(int instituicao, int quantidade = 10, int pagina = 10) {
             try {
-                return Ok(Repository.Listar(instituicao));
+                quantidade = quantidade < 1 ? 2 : quantidade;
+                pagina = pagina < 0 ? 0 : pagina;
+                return Ok(Repository.ListarInstituicao(instituicao, quantidade,pagina));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
 
-        [HttpGet("listar/data/{dataInicial}/{dataFinal}")]
-        public IActionResult ListarEventos(DateTime dataInicial,DateTime dataFinal) {
+        [HttpGet("listar/data/{dataInicial}/{dataFinal}/{quantidade}/{pagina}")]
+        public IActionResult ListarEventos(DateTime dataInicial,DateTime dataFinal, int quantidade = 10, int pagina = 10) {
             try {
-                if(dataFinal < dataInicial) {
+                quantidade = quantidade < 1 ? 2 : quantidade;
+                pagina = pagina < 0 ? 0 : pagina;
+                if (dataFinal < dataInicial) {
                     throw new Exception("A Data inicial não pode ser maior do que a data final");
                 }
-                return Ok(Repository.Listar(dataInicial,dataFinal));
+                return Ok(Repository.Listar(dataInicial,dataFinal, quantidade, pagina));
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -79,7 +96,7 @@ namespace Senai.WebAPI.Controllers {
                 Repository.Cadastrar(evento);
                 return Ok(Repository.Listar());
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 
@@ -93,7 +110,7 @@ namespace Senai.WebAPI.Controllers {
                 Repository.Alterar(evento);
                 return Ok(Repository.Listar());
             } catch (Exception exc) {
-                return BadRequest(exc.Message);
+                return BadRequest(new{erro = exc.Message});
             }
         }
 

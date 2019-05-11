@@ -1,4 +1,5 @@
 ﻿using Senai.WebAPI.Domains;
+using Senai.WebAPI.Enums;
 using System.Collections.Generic;
 
 namespace Senai.WebAPI.Interfaces {
@@ -24,6 +25,15 @@ namespace Senai.WebAPI.Interfaces {
         /// <param name="quantidade">Quantidade de convites que serão retornados</param>
         /// <returns>Uma lista com N convites do banco de dados</returns>
         List<ConvitesDomain> Listar(int pagina,int quantidade);
+
+        /// <summary>
+        /// Lista uma quantidade de convites com uma determinada situação
+        /// </summary>
+        /// <param name="pagina">A partir de qual indice será retornado</param>
+        /// <param name="quant">Quantos convites serão retornados</param>
+        /// <param name="situacao">Apenas convites com essa situação serão retornados</param>
+        /// <returns>Uma lista com N convites de uma mesma situação</returns>
+        List<ConvitesDomain> Listar(int pagina, int quant, EnSituacaoConvite situacao);
 
         /// <summary>
         /// Retorna todos os convidados de um convite
@@ -55,6 +65,16 @@ namespace Senai.WebAPI.Interfaces {
         /// <param name="pagina">A partir de qual registro será contado</param>
         /// <returns>Retorna N convites de um usuario a partir de N registro</returns>
         List<ConvitesDomain> MeusConvites(int ID, int pagina, int quant);
+
+        /// <summary>
+        /// Lista uma quantidade de convites de um usuario de uma determinada situação
+        /// </summary>
+        /// <param name="ID">ID do usuario</param>
+        /// <param name="pagina">numero da pagina procurada</param>
+        /// <param name="quant">quantidade de itens que será retornada</param>
+        /// <param name="situacao">situação de todos os convites que serão procurados</param>
+        /// <returns>Retorna uma lista com todos os convites com a mesma situação</returns>
+        List<ConvitesDomain> MeusConvites(int ID, int pagina, int quant, EnSituacaoConvite situacao);
 
         /// <summary>
         /// Lista todos os eventos de um usuario onde ele é o palestrante
