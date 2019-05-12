@@ -5,10 +5,11 @@ using Senai.WebAPI.Enums;
 using Senai.WebAPI.Interfaces;
 using Senai.WebAPI.Repositorios;
 using Senai.WebAPI.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Senai.WebAPI.Controllers {
     [Produces("application/json")]
-    [Route("v2/api/[controller]")]
+    [Route("api/v2/[controller]")]
     [ApiController]
     public class EventosController : ControllerBase{
 
@@ -18,12 +19,11 @@ namespace Senai.WebAPI.Controllers {
             Repository = new EventosRepository();
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet("listar/todos")]
-        public IActionResult ListarEventos(int quantidade = 10, int pagina = 10) {
+        public IActionResult ListarEventos() {
             try {
-                quantidade = quantidade < 1 ? 2 : quantidade;
-                pagina = pagina < 0 ? 0 : pagina;
-                return Ok(Repository.Listar(quantidade,pagina));
+                return Ok(Repository.Listar());
             }catch(Exception exc) {
                 return BadRequest(new{erro = exc.Message});
             }
@@ -39,7 +39,7 @@ namespace Senai.WebAPI.Controllers {
         }
 
         [HttpGet("listar/{id}")]
-        public IActionResult ListarEventos(int id) {
+        public IActionResult ListarEvento(int id) {
             try {
                 return Ok(Repository.Listar(id));
             } catch (Exception exc) {
@@ -84,6 +84,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
+        [Authorize(Roles = "Administrador,Organizador")]
         [HttpPost("cadastrar")]
         public IActionResult InserirEvento(EventosDomain evento) {
             try {
@@ -100,6 +101,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPut("alterar")]
         public IActionResult AlterarEvento(EventosDomain evento) {
             try {

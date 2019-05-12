@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 namespace Senai.WebAPI.Controllers
 {
     [Produces("application/json")]//Define a saida como JSON 
-    [Route("v2/api/[controller]")]//local onde sera encontrado a api
+    [Route("api/v2/[controller]")]//local onde sera encontrado a api
     [ApiController]//indica que a classe abaixo é uma API
     public class TiposEventosController : ControllerBase
     {
@@ -21,6 +21,7 @@ namespace Senai.WebAPI.Controllers
             tiposEventos = new TiposEventosRepository();
         }
 
+        [Authorize(Roles = "Administrador,Organizador")]
         [HttpGet("listar")] //o nome do metodo não importa , pois o que define se ele é get ou set ou outra coisa é o [Http] acima dele
         public IActionResult Listar() {
             try {
@@ -30,6 +31,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost("cadastrar")]
         public IActionResult Cadastrar(TiposEventosDomain tipoevento) 
         {
@@ -43,6 +45,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPut("alterar")]
         public IActionResult Atualizar(TiposEventosDomain EventoAtualizado) {
             try {

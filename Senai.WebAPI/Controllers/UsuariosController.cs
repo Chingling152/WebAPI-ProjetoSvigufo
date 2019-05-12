@@ -10,11 +10,12 @@ using Senai.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
+using Senai.WebAPI.Enums;
 
 namespace Senai.WebAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("v2/api/[controller]")]
+    [Route("api/v2/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase
     {
@@ -23,7 +24,7 @@ namespace Senai.WebAPI.Controllers
         public UsuariosController() {
             repositorio = new UsuariosRepository();
         }
-
+        [Authorize(Roles = "Administrador")]
         [HttpPost("cadastrar")]
         public IActionResult CadastrarUsuario(UsuariosDomain usuario) {
             try {
@@ -36,6 +37,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPut("alterar")]
         public IActionResult AlterarUsuario(UsuariosDomain usuario) {
             try {
@@ -51,6 +53,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("alterar/minhasinformacoes")]
         public IActionResult AlterarUsuario() {
             try {
@@ -83,7 +86,8 @@ namespace Senai.WebAPI.Controllers
                     new Claim(JwtRegisteredClaimNames.Email,usuario.Email),
                     new Claim(JwtRegisteredClaimNames.Jti,usuario.ID.ToString()),
                     new Claim(ClaimTypes.Role,usuario.TipoUsuario.ToString()),
-                    new Claim("Role",usuario.TipoUsuario.ToString())
+                    new Claim("Role",usuario.TipoUsuario.ToString()),
+
                 };
 
                 // Chave de acesso do token
@@ -109,6 +113,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet("listar")]
         public IActionResult Listar() {
             try {
@@ -120,6 +125,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet("listar/{id}")]
         public IActionResult Listar(int id) {
             try {
@@ -128,6 +134,18 @@ namespace Senai.WebAPI.Controllers
                 return BadRequest("Ocorreu um erro no banco de dados\n" + exc.Message);
             } catch (Exception exc) {
                 return BadRequest(new{erro = exc.Message});
+            }
+        }
+
+        [Authorize(Roles = "Administrador")]
+        [HttpGet("listar/{tipo}")]
+        public IActionResult ListarTipo(EnTipoUsuario tipo = EnTipoUsuario.Usuario) {
+            try {
+                return Ok(repositorio.Listar(tipo));
+            } catch (SqlException exc) {
+                return BadRequest("Ocorreu um erro no banco de dados\n" + exc.Message);
+            } catch (Exception exc) {
+                return BadRequest(new { erro = exc.Message });
             }
         }
     }

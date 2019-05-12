@@ -8,7 +8,7 @@ using Senai.WebAPI.Repositorios;
 namespace Senai.WebAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("v2/api/[controller]")]
+    [Route("api/v2/[controller]")]
     [ApiController]
     public class InstituicoesController : ControllerBase
     {
@@ -18,7 +18,8 @@ namespace Senai.WebAPI.Controllers
         {
             Instituicao = new InstituicoesRepository();
         }
-        
+
+        [Authorize(Roles = "Administrador")]
         [HttpGet("listar/todos")]
         public IActionResult ListarInstituicoes() {
             try { 
@@ -28,6 +29,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet("listar/{id}")]
         public IActionResult BuscarPorID(int id) {
             try{
@@ -37,6 +39,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("listar/{nome}")]
         public IActionResult BuscarPorNome(string nome) {
             try {
@@ -49,6 +52,7 @@ namespace Senai.WebAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost("cadastrar")]
         public IActionResult CadastrarInstituicao(InstituicoesDomain instituicao) {
             try {
@@ -59,6 +63,8 @@ namespace Senai.WebAPI.Controllers
             }
 
         }
+
+        [Authorize(Roles = "Administrador")]
         [HttpPut("alterar")]
         public IActionResult AtualizarInstituicao(InstituicoesDomain instituicao) {
             try {

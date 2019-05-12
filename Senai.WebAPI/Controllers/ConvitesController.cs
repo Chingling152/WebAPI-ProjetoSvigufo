@@ -10,7 +10,7 @@ using Senai.WebAPI.Repositorios;
 
 namespace Senai.WebAPI.Controllers {
     [Produces("application/json")]
-    [Route("v2/api/[controller]")]
+    [Route("api/v2/[controller]")]
     [ApiController]
     public class ConvitesController : ControllerBase {
         public readonly IConvitesRepository repositorio;
@@ -19,7 +19,7 @@ namespace Senai.WebAPI.Controllers {
             repositorio = new ConvitesRepository();
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrador")]
         [HttpGet("listar/{pagina}/{quantidade}")]
         public IActionResult VerConvites(int pagina = 0, int quantidade = 10) {
             try {
@@ -31,6 +31,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet("listar/todos")]
         public IActionResult VerTodosConvites(){
             try {	        
@@ -41,7 +42,7 @@ namespace Senai.WebAPI.Controllers {
 	        }
         }
    
-
+        [Authorize]
         [HttpGet("listar/convidados/{id}/todos")]
         public IActionResult VerTodosConvidados(int id) {
             try {
@@ -51,6 +52,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
+        [Authorize]
         [HttpGet("listar/convidados/{id}/{pagina}/{quantidade}")]
         public IActionResult VerConvidados(int id,int pagina = 0, int quantidade = 10) {
             try {
@@ -62,6 +64,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet("listar/{id}")]
         public IActionResult VerConvite(int id) {
             try {
@@ -71,7 +74,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
         
-
+        [Authorize]
         [HttpGet("listar/meusconvites/{pagina}/{quantidade}")]
         public IActionResult MeusConvites(int pagina = 0, int quantidade = 10) {
             try {
@@ -86,6 +89,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
+        [Authorize]
         [HttpGet("listar/meusconvites/{pagina}/{quantidade}/{situacao}")]
         public IActionResult MeusConvitesSituacao(int pagina = 0, int quantidade = 10,EnSituacaoConvite situacao = EnSituacaoConvite.Aguardando) {
             try {
@@ -100,6 +104,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
+        [Authorize]
         [HttpGet("listar/minhaspalestras/{pagina}/{quantidade}")]
         public IActionResult MinhasPalestras(int pagina = 0, int quantidade = 10) {
             try {
@@ -114,8 +119,8 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
-        [HttpPost]
-        [Route("inscricao")]
+        [Authorize]
+        [HttpPost("inscricao")]
         public IActionResult SeInscrever(ConvitesDomain convite) {
             try {
                 convite.IDUsuario = Convert.ToInt32(
@@ -128,8 +133,8 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
-        [HttpPost]
-        [Route("convidar")]
+        [Authorize]
+        [HttpPost("convidar")]
         public IActionResult Convidar(ConvitesDomain convite) {
             try {
                 new UsuariosRepository().Listar(convite.IDUsuario);
@@ -142,6 +147,7 @@ namespace Senai.WebAPI.Controllers {
             }
         }
 
+        [Authorize(Roles = "Administrador,Organizador")]
         [HttpPut("alterar")]
         public IActionResult AlterarStatus(ConvitesDomain convite) {
             try {
